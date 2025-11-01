@@ -28,6 +28,7 @@ import testimonialsRoutes from "./routes/commentsRoutes.js";
 import authRoutes from "./routes/AuthRoutes.js";
 import adminRoutes from "./routes/AdminRoutes.js";
 import paymentRoutes from "./routes/DonationPaymentRoute.js";
+import bannerRoutes from "./routes/BannerRoutes.js";
 
 // Initialize express app
 const app = express();
@@ -76,6 +77,7 @@ app.use("/api/emails", emailRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/testimonials", testimonialsRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api/banner", bannerRoutes);
 
 
 // Auth/Admin Routes

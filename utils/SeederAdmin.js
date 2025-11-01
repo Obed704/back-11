@@ -19,7 +19,7 @@ const seedAdmin = async () => {
   await connectDB();
   await Admin.deleteMany({}); // delete all admins
 
-  const admin = new Admin({ email: "niyobyoseobed1@gmail.com", password: "123" });
+  const admin = new Admin({ email: "stem@gmail.com", password: "123" });
   await admin.save();
   console.log("Admin created:", admin.email);
   process.exit();

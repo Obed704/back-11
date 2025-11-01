@@ -1,1352 +1,872 @@
 import stringSimilarity from "string-similarity";
 
 var intents =[
-    {
-        "intent": "who is obed",
-        "examples": [
-            "Who is Obed?",
-            "Can you tell me about Obed?",
-            "Who’s Obed?",
-            "What’s Obed’s background?",
-            "Tell me about this Obed person",
-            "Who is this Obed guy?",
-            "What does Obed do?",
-            "Who is Obed in your organization?",
-            "Tell me more about Obed",
-            "Is Obed someone important?",
-            "What’s Obed’s role?",
-            "Who is the person named Obed?",
-            "Give me details on Obed",
-            "What can you say about Obed?",
-            "Who’s the guy called Obed?",
-            "What is Obed known for?",
-            "Tell me something about Obed",
-            "Who is Obed associated with?",
-            "What’s the deal with Obed?",
-            "Can you explain who Obed is?",
-            "Who’s that Obed you mentioned?",
-            "What’s Obed all about?",
-            "Tell me who Obed is, please"
-        ],
-        "responses": ["Hi — he is a programmer"]
-    },
-    {
-        "intent": "greeting",
-        "examples": [
-            "Hello",
-            "Hi",
-            "Hey there",
-            "Good morning",
-            "Hey, how’s it going?",
-            "Hi there!",
-            "Good afternoon",
-            "Hello, how are you?",
-            "Hey, what’s up?",
-            "Good evening!",
-            "Hiya!",
-            "Greetings!",
-            "What’s good?",
-            "Hello there!",
-            "Yo, how’s it hangin’?",
-            "Hi, how’s everything?",
-            "Good day!",
-            "Hey, nice to see you!",
-            "Morning!",
-            "What’s new with you?",
-            "Hello, what can you do?",
-            "Hi, ready to chat?",
-            "Hey, how can you help?"
-        ],
-        "responses": ["Hi — I’m the STEM Inspires assistant. I can help with programs, events, women in STEM, donations, and more."]
-    },
-    {
-        "intent": "what_is_stem_inspires",
-        "examples": [
-            "What is STEM Inspires?",
-            "Tell me about STEM Inspires",
-            "Who are you?",
-            "What’s STEM Inspires all about?",
-            "Can you explain STEM Inspires?",
-            "What does STEM Inspires do?",
-            "Who is behind STEM Inspires?",
-            "What’s the deal with STEM Inspires?",
-            "Tell me more about your organization",
-            "What is the STEM Inspires program?",
-            "Who runs STEM Inspires?",
-            "What’s the purpose of STEM Inspires?",
-            "Can you describe STEM Inspires?",
-            "What kind of organization is STEM Inspires?",
-            "Tell me what STEM Inspires is",
-            "What’s the mission of STEM Inspires?",
-            "Who are the people at STEM Inspires?",
-            "What does your group do?",
-            "Explain what STEM Inspires is about",
-            "What’s the story behind STEM Inspires?",
-            "Give me details on STEM Inspires",
-            "What makes STEM Inspires unique?"
-        ],
-        "responses": ["STEM Inspires is a nonprofit bringing robotics and STEM education to youth ages 9–16 through FIRST LEGO League."]
-    },
-    {
-        "intent": "mission",
-        "examples": [
-            "What is your mission?",
-            "What do you aim to do?",
-            "What is your goal?",
-            "What’s the mission of STEM Inspires?",
-            "What are you trying to achieve?",
-            "What’s your purpose?",
-            "What goals does STEM Inspires have?",
-            "What’s the main objective?",
-            "What are you working toward?",
-            "Tell me about your mission statement",
-            "What’s your organization’s aim?",
-            "What do you hope to accomplish?",
-            "What’s the big plan for STEM Inspires?",
-            "What drives your organization?",
-            "What’s the core mission here?",
-            "What are your primary goals?",
-            "What’s the point of your work?",
-            "What’s STEM Inspires’ focus?",
-            "What do you want to achieve long-term?",
-            "What’s your reason for existing?",
-            "Tell me about your purpose",
-            "What’s the vision behind your mission?"
-        ],
-        "responses": ["We inspire the next generation of innovators through inclusive, hands-on robotics programs."]
-    },
-    {
-        "intent": "vision",
-        "examples": [
-            "What is your vision?",
-            "Future goals?",
-            "Where are you heading?",
-            "What’s the future for STEM Inspires?",
-            "What’s your long-term vision?",
-            "Where do you see yourself in the future?",
-            "What are your future plans?",
-            "What’s the big picture for STEM Inspires?",
-            "What’s your vision for the future?",
-            "Where is STEM Inspires going?",
-            "What are your aspirations?",
-            "What’s the long-term goal?",
-            "What do you envision for the future?",
-            "What’s your dream for STEM Inspires?",
-            "What’s the roadmap ahead?",
-            "Where do you want to take this?",
-            "What’s the future outlook?",
-            "What are you planning for the long haul?",
-            "What’s the endgame for STEM Inspires?",
-            "What’s your vision statement?",
-            "Where are you aiming to go?",
-            "What’s next for your organization?"
-        ],
-        "responses": ["Our vision is to grow robotics across Africa and empower young engineers."]
-    },
-    {
-        "intent": "fll_program",
-        "examples": [
-            "What is FIRST LEGO League?",
-            "Explain FLL",
-            "How does FLL work?",
-            "What’s FIRST LEGO League about?",
-            "Tell me about FLL",
-            "What is the FLL program?",
-            "How does FIRST LEGO League function?",
-            "What’s the deal with FLL?",
-            "Can you describe FIRST LEGO League?",
-            "What happens in FLL?",
-            "What’s the structure of FLL?",
-            "How is FLL organized?",
-            "What do kids do in FLL?",
-            "Tell me more about FIRST LEGO League",
-            "What’s the purpose of FLL?",
-            "How does the FLL program operate?",
-            "What’s involved in FIRST LEGO League?",
-            "Explain the FLL competition",
-            "What activities are in FLL?",
-            "What’s the focus of FIRST LEGO League?",
-            "How do students participate in FLL?",
-            "What’s the format of FLL?"
-        ],
-        "responses": ["FLL introduces STEM to kids 9–16 through robotics, teamwork, and problem solving."]
-    },
-    {
-        "intent": "age_group",
-        "examples": [
-            "Who can join?",
-            "What ages are allowed?",
-            "Age requirements?",
-            "Who’s eligible to participate?",
-            "What’s the age range for your programs?",
-            "Can kids of any age join?",
-            "What ages can join STEM Inspires?",
-            "Who’s allowed to participate?",
-            "What’s the age limit for FLL?",
-            "Are there age restrictions?",
-            "What ages are your programs for?",
-            "Who can sign up for your activities?",
-            "What’s the age group for robotics?",
-            "Can teenagers join?",
-            "What’s the minimum age to participate?",
-            "Are there age rules for FLL?",
-            "Who’s the target age group?",
-            "What ages do you work with?",
-            "Can younger kids join?",
-            "What’s the age cutoff?",
-            "Who qualifies age-wise?",
-            "What’s the age eligibility?"
-        ],
-        "responses": ["The program is for youth ages 9–16."]
-    },
-    {
-        "intent": "events",
-        "examples": [
-            "Tell me about your events",
-            "What competitions do you host?",
-            "National Championship?",
-            "What events does STEM Inspires run?",
-            "What’s your event lineup?",
-            "What competitions are there?",
-            "Tell me about your robotics events",
-            "What’s the National Championship about?",
-            "What kind of events do you organize?",
-            "Are there any big events?",
-            "What’s happening with your competitions?",
-            "Tell me about the robotics championship",
-            "What events do you put on?",
-            "What’s the schedule for your events?",
-            "What competitions do students join?",
-            "What’s the deal with your events?",
-            "Are there annual competitions?",
-            "What’s the National Robotics Championship?",
-            "What events can schools participate in?",
-            "Tell me about your tournaments",
-            "What’s the biggest event you host?",
-            "What competitions are coming up?"
-        ],
-        "responses": ["We host the Annual National Robotics Championship of Rwanda and FLL competitions."]
-    },
-    {
-        "intent": "bring_fll",
-        "examples": [
-            "How can I bring FLL to my school?",
-            "Start a robotics team",
-            "How do schools join?",
-            "How can my school get involved with FLL?",
-            "What’s the process to start FLL at school?",
-            "How do I set up a robotics team?",
-            "How can we join FIRST LEGO League?",
-            "What steps do schools take to join FLL?",
-            "How do I get FLL in my school?",
-            "Can my school start a robotics program?",
-            "How do we bring robotics to our school?",
-            "What’s needed to join FLL?",
-            "How can a school participate in FLL?",
-            "How do I start an FLL team?",
-            "What’s the way to get FLL at my school?",
-            "How can we launch a robotics team?",
-            "What do schools need for FLL?",
-            "How do I introduce FLL to my school?",
-            "Can schools join your robotics program?",
-            "How do we get started with FLL?",
-            "What’s the process for schools to join?",
-            "How can my school start with robotics?"
-        ],
-        "responses": ["Use 'Get Started' on our site. A mentor will guide your school to join FLL."]
-    },
-    {
-        "intent": "school_process",
-        "examples": [
-            "How do you recruit schools?",
-            "School joining process?",
-            "Steps to join?",
-            "How do schools get involved?",
-            "What’s the process for schools to join?",
-            "How do you bring schools on board?",
-            "What steps do schools follow to join?",
-            "How are schools recruited for FLL?",
-            "What’s the onboarding process for schools?",
-            "How do schools sign up?",
-            "What’s the procedure for schools?",
-            "How do you get schools to participate?",
-            "What’s the process to join your programs?",
-            "How do schools become part of FLL?",
-            "What do schools need to do to join?",
-            "How do you engage schools?",
-            "What’s the recruitment process for schools?",
-            "How can a school join your program?",
-            "What are the steps for school participation?",
-            "How do you get schools started?",
-            "What’s the school enrollment process?",
-            "How do schools get on board with FLL?"
-        ],
-        "responses": ["We introduce FLL, address challenges, get schools started, and provide ongoing support."]
-    },
-    {
-        "intent": "support_schools",
-        "examples": [
-            "How do you support schools?",
-            "What help do schools get?",
-            "Do you provide kits?",
-            "What kind of support do schools receive?",
-            "How do you assist schools in FLL?",
-            "What resources do schools get?",
-            "Do you give schools materials?",
-            "How are schools supported in your program?",
-            "What kind of help do you offer schools?",
-            "Do schools get robotics kits?",
-            "What support is available for schools?",
-            "How do you help schools with robotics?",
-            "Do you supply schools with equipment?",
-            "What assistance do schools get?",
-            "How do you support school teams?",
-            "Do you provide tools for schools?",
-            "What’s the support system for schools?",
-            "How do schools get help from you?",
-            "Do you donate resources to schools?",
-            "What kind of aid do schools receive?",
-            "How do you back schools in FLL?",
-            "What materials do schools get?"
-        ],
-        "responses": ["We donate kits, train coaches, and mentor teams continuously."]
-    },
-    {
-        "intent": "capacity_building",
-        "examples": [
-            "Do you train teachers?",
-            "Workshops for coaches?",
-            "Coach support?",
-            "Do you offer teacher training?",
-            "How do you support coaches?",
-            "Are there workshops for teachers?",
-            "Do you help train robotics coaches?",
-            "What training do teachers get?",
-            "How do you build coach skills?",
-            "Are there programs for teacher training?",
-            "Do you provide coach workshops?",
-            "How do teachers learn to coach?",
-            "What support do coaches receive?",
-            "Do you run training for educators?",
-            "How do you prepare teachers for FLL?",
-            "Are there coaching classes?",
-            "What kind of training for coaches?",
-            "Do you help teachers with robotics?",
-            "How do you train team coaches?",
-            "Are workshops available for coaches?",
-            "What’s the training process for teachers?",
-            "Do you offer coach development?"
-        ],
-        "responses": ["Yes — we run workshops to build coaches’ skills and confidence."]
-    },
-    {
-        "intent": "continuous_support",
-        "examples": [
-            "Do you guide teams?",
-            "Do you keep helping?",
-            "After starting, what next?",
-            "How do you support teams ongoing?",
-            "Do you provide continuous help?",
-            "What happens after teams start?",
-            "Do you mentor teams regularly?",
-            "How do you keep supporting teams?",
-            "Is there ongoing support for teams?",
-            "What’s the follow-up support?",
-            "Do you stay with teams after starting?",
-            "How do teams get continuous help?",
-            "What support do teams get long-term?",
-            "Do you guide teams throughout?",
-            "What’s the ongoing help for teams?",
-            "How do you assist teams over time?",
-            "Do you provide regular mentoring?",
-            "What’s the support after joining?",
-            "How do you help teams continuously?",
-            "Do teams get ongoing guidance?",
-            "What’s the long-term support plan?",
-            "How do you keep helping teams?"
-        ],
-        "responses": ["We mentor teams weekly, share resources, and support learning."]
-    },
-    {
-        "intent": "impact_numbers",
-        "examples": [
-            "How many teams?",
-            "Impact so far?",
-            "How many students?",
-            "What’s your reach?",
-            "How many schools are involved?",
-            "What’s the impact of STEM Inspires?",
-            "How many kids have you reached?",
-            "What’s the number of teams?",
-            "How many students participate?",
-            "What’s your program’s impact?",
-            "How many teams have you started?",
-            "What’s the scale of your work?",
-            "How many students are involved?",
-            "What’s the total impact so far?",
-            "How many schools have joined?",
-            "What’s the reach of your programs?",
-            "How many kids are in FLL?",
-            "What’s the number of participants?",
-            "How many teams compete?",
-            "What’s the overall impact?",
-            "How many students benefit?",
-            "What’s your program’s reach?"
-        ],
-        "responses": ["We’ve launched multiple teams, reached many students, and hosted competitions."]
-    },
-    {
-        "intent": "build_excitement",
-        "examples": [
-            "How do you build excitement?",
-            "How do you motivate?",
-            "Student engagement?",
-            "How do you get students excited?",
-            "What’s your approach to motivation?",
-            "How do you engage kids?",
-            "How do you inspire students?",
-            "What gets kids excited about FLL?",
-            "How do you make robotics fun?",
-            "How do you motivate schools?",
-            "What’s your strategy for engagement?",
-            "How do you get kids interested?",
-            "How do you build enthusiasm?",
-            "What inspires students to join?",
-            "How do you create excitement?",
-            "How do you engage teachers?",
-            "What’s your way of motivating kids?",
-            "How do you get students pumped?",
-            "How do you spark interest in FLL?",
-            "What’s your engagement plan?",
-            "How do you excite schools?",
-            "What motivates your participants?"
-        ],
-        "responses": ["We visit schools, present FLL, and inspire teachers and students to join."]
-    },
-    {
-        "intent": "build_resources",
-        "examples": [
-            "Do you provide materials?",
-            "What resources do you give?",
-            "Do you supply kits?",
-            "What materials do schools get?",
-            "Do you give robotics equipment?",
-            "What resources are provided?",
-            "Do schools get supplies?",
-            "What kind of materials do you offer?",
-            "Do you donate robotics kits?",
-            "What tools do schools receive?",
-            "Are resources provided to schools?",
-            "What equipment do you supply?",
-            "Do you give out kits for FLL?",
-            "What’s included in your resources?",
-            "Do schools get robotics materials?",
-            "What supplies do you provide?",
-            "Do you offer robotics tools?",
-            "What resources do teams get?",
-            "Do you donate equipment to schools?",
-            "What materials support FLL?",
-            "Are kits provided to schools?",
-            "What do you give to teams?"
-        ],
-        "responses": ["We donate starter kits, expansion sets, and competition mats to schools."]
-    },
-    {
-        "intent": "build_engineers",
-        "examples": [
-            "How do you build engineers?",
-            "Student development?",
-            "How do kids learn?",
-            "How do you train future engineers?",
-            "What’s your approach to student growth?",
-            "How do students develop skills?",
-            "How do you help kids become engineers?",
-            "What’s the process for student learning?",
-            "How do kids gain engineering skills?",
-            "What helps students grow in STEM?",
-            "How do you prepare kids for engineering?",
-            "What’s your method for teaching kids?",
-            "How do students learn robotics?",
-            "What’s the learning path for kids?",
-            "How do you develop young engineers?",
-            "What skills do kids learn?",
-            "How do you teach engineering?",
-            "What’s the student development plan?",
-            "How do kids build STEM skills?",
-            "What’s the process for growing engineers?",
-            "How do you support student learning?",
-            "What helps kids become innovators?"
-        ],
-        "responses": ["We mentor, share online resources, and meet teams weekly to help them grow."]
-    },
-    {
-        "intent": "women_in_stem",
-        "examples": [
-            "Do you support women?",
-            "Girls in STEM?",
-            "Women in robotics?",
-            "How do you promote girls in STEM?",
-            "Do you focus on women in STEM?",
-            "Are girls involved in your programs?",
-            "How do you support women in robotics?",
-            "Do you encourage girls in STEM?",
-            "What’s your work with women in STEM?",
-            "How do girls participate in FLL?",
-            "Do you promote female engineers?",
-            "What do you do for girls in robotics?",
-            "Are women a focus in your programs?",
-            "How do you help girls in STEM?",
-            "Do you support female students?",
-            "What’s your approach to women in STEM?",
-            "How do you involve girls in robotics?",
-            "Do you work with women in engineering?",
-            "What’s your role in girls’ STEM education?",
-            "How do you empower women in STEM?",
-            "Are girls a priority in your work?",
-            "What do you do for female participants?"
-        ],
-        "responses": ["Yes — we are women-led and work with 500+ girls across all-girls schools."]
-    },
-    {
-        "intent": "girls_schools",
-        "examples": [
-            "Which girls schools?",
-            "Do you work with girls only schools?",
-            "Women-founded programs?",
-            "What girls’ schools do you partner with?",
-            "Are you involved with all-girls schools?",
-            "Which schools for girls do you work with?",
-            "Do you collaborate with girls’ schools?",
-            "What’s your work with girls-only schools?",
-            "Which all-girls schools are involved?",
-            "Do you partner with female schools?",
-            "What girls’ schools are in your program?",
-            "Are there specific girls’ schools you work with?",
-            "Which schools for girls are part of FLL?",
-            "Do you support girls-only education?",
-            "What’s your partnership with girls’ schools?",
-            "Which all-girls schools do you help?",
-            "Are girls’ schools part of your work?",
-            "What female schools do you collaborate with?",
-            "Do you work with women-led schools?",
-            "Which girls’ schools participate?",
-            "What’s your role with girls’ schools?",
-            "Are there girls-only schools in FLL?"
-        ],
-        "responses": ["We partner with Maranyundo Girls, FAWE, Gashora Girls Academy, and others."]
-    },
-    {
-        "intent": "champions",
-        "examples": [
-            "Who are the champions?",
-            "Which teams won?",
-            "Top schools?",
-            "Who won the robotics championship?",
-            "What teams were victorious?",
-            "Which schools are the best?",
-            "Who are the top teams?",
-            "What’s the winning team?",
-            "Which schools won competitions?",
-            "Who took the championship title?",
-            "What teams came out on top?",
-            "Which schools are champions?",
-            "Who won in 2023?",
-            "What are the top-performing schools?",
-            "Which teams are the winners?",
-            "Who’s leading in competitions?",
-            "What schools won the robotics event?",
-            "Who are the competition winners?",
-            "Which teams excelled?",
-            "What’s the top school in FLL?",
-            "Who won the national championship?",
-            "Which teams are the best in FLL?"
-        ],
-        "responses": ["Maranyundo Girls won the 2023 championship. FAWE and Gashora are top teams."]
-    },
-    {
-        "intent": "donate",
-        "examples": [
-            "How can I donate?",
-            "Donation options",
-            "Support financially",
-            "How do I give money?",
-            "What’s the way to donate?",
-            "Can I contribute financially?",
-            "How can I support with a donation?",
-            "What are the donation methods?",
-            "How do I make a donation?",
-            "Can I help with funding?",
-            "What’s the process to donate?",
-            "How can I give to STEM Inspires?",
-            "Are there ways to donate money?",
-            "How do I send a donation?",
-            "What’s the donation procedure?",
-            "Can I make a financial contribution?",
-            "How do I support with money?",
-            "What are my donation options?",
-            "How can I fund your programs?",
-            "What’s the way to contribute?",
-            "How do I give to your cause?",
-            "Can I donate to your organization?"
-        ],
-        "responses": ["Click 'Donate' on our site or email info@steminspires.tech. EIN: 92-0345640."]
-    },
-    {
-        "intent": "sponsor_team",
-        "examples": [
-            "How do I sponsor a team?",
-            "Sponsor students",
-            "Help a robotics team",
-            "How can I fund a team?",
-            "What’s the way to sponsor a team?",
-            "Can I support a robotics team?",
-            "How do I back a student team?",
-            "What’s the process to sponsor?",
-            "How can I help a team financially?",
-            "Can I sponsor kids in robotics?",
-            "How do I support a team?",
-            "What’s the sponsorship process?",
-            "How can I fund students in FLL?",
-            "Can I contribute to a team’s costs?",
-            "How do I become a team sponsor?",
-            "What’s the way to help a team?",
-            "Can I support a school’s team?",
-            "How do I sponsor a robotics group?",
-            "What are the sponsorship options?",
-            "How can I help fund a team?",
-            "What’s the process for team sponsorship?",
-            "Can I back a team in FLL?"
-        ],
-        "responses": ["You can sponsor a team through our 'Sponsor a Team' option on the website."]
-    },
-    {
-        "intent": "fund_future",
-        "examples": [
-            "What is Fund Their Future?",
-            "What is your fund program?",
-            "Future funding?",
-            "What’s the Fund Their Future campaign?",
-            "Tell me about Fund Their Future",
-            "What’s your funding program?",
-            "What’s Fund Their Future about?",
-            "Can you explain Fund Their Future?",
-            "What’s the deal with Fund Their Future?",
-            "What’s your future funding plan?",
-            "What’s the purpose of Fund Their Future?",
-            "How does Fund Their Future work?",
-            "What’s the goal of your fund program?",
-            "Tell me more about your funding campaign",
-            "What’s the focus of Fund Their Future?",
-            "What’s your program for future funding?",
-            "Can you describe Fund Their Future?",
-            "What’s the funding initiative about?",
-            "What’s the Fund Their Future program?",
-            "How do you fund the future?",
-            "What’s the campaign for future support?",
-            "What’s involved in Fund Their Future?"
-        ],
-        "responses": ["Fund Their Future is our campaign to support youth robotics and STEM education."]
-    },
-    {
-        "intent": "get_involved",
-        "examples": [
-            "How do I get involved?",
-            "Volunteer with you",
-            "Join your work",
-            "How can I participate?",
-            "What’s the way to get involved?",
-            "Can I help with your programs?",
-            "How do I join STEM Inspires?",
-            "What can I do to get involved?",
-            "How can I contribute to your work?",
-            "Can I volunteer with STEM Inspires?",
-            "How do I become part of your team?",
-            "What’s the process to join in?",
-            "How can I support your mission?",
-            "Can I get involved with FLL?",
-            "What’s the way to participate?",
-            "How do I help your organization?",
-            "Can I join your efforts?",
-            "What opportunities are there to help?",
-            "How can I be part of STEM Inspires?",
-            "What’s the way to volunteer?",
-            "How do I engage with your programs?",
-            "Can I work with you?"
-        ],
-        "responses": ["Visit 'Get Involved' on our site — you can volunteer, partner, or mentor."]
-    },
-    {
-        "intent": "volunteer",
-        "examples": [
-            "Can I volunteer?",
-            "How do I help?",
-            "Join as volunteer",
-            "How can I volunteer with you?",
-            "What’s the way to volunteer?",
-            "Can I help out as a volunteer?",
-            "How do I become a volunteer?",
-            "What volunteer opportunities are there?",
-            "Can I assist as a volunteer?",
-            "How do I sign up to volunteer?",
-            "What’s the process to help out?",
-            "Can I contribute as a volunteer?",
-            "How can I volunteer for FLL?",
-            "What can I do as a volunteer?",
-            "How do I get started volunteering?",
-            "Are there volunteer roles available?",
-            "How can I help as a volunteer?",
-            "What’s the way to assist?",
-            "Can I volunteer with STEM Inspires?",
-            "How do I join as a volunteer?",
-            "What volunteer positions do you have?",
-            "How can I support as a volunteer?"
-        ],
-        "responses": ["Yes — check 'Get Involved' on our site for volunteer opportunities."]
-    },
-    {
-        "intent": "partnerships",
-        "examples": [
-            "Do you partner with schools?",
-            "Partnerships?",
-            "Work with other orgs?",
-            "Do you collaborate with schools?",
-            "What partnerships do you have?",
-            "Do you work with other organizations?",
-            "How do you partner with schools?",
-            "Are there partnerships with groups?",
-            "Do you team up with schools?",
-            "What’s your partnership model?",
-            "Do you collaborate with nonprofits?",
-            "How do you work with other orgs?",
-            "Are schools your partners?",
-            "What kind of partnerships do you form?",
-            "Do you have school collaborations?",
-            "How do you engage with partners?",
-            "Do you partner with other groups?",
-            "What’s your approach to partnerships?",
-            "Do you work with educational orgs?",
-            "How do schools partner with you?",
-            "Are there collaboration opportunities?",
-            "What partnerships support your work?"
-        ],
-        "responses": ["We partner with schools, teachers, and mentors to support robotics."]
-    },
-    {
-        "intent": "contact",
-        "examples": [
-            "How can I contact you?",
-            "Email address?",
-            "Reach out to STEM Inspires",
-            "What’s your contact info?",
-            "How do I get in touch?",
-            "Can you give me your email?",
-            "How do I reach STEM Inspires?",
-            "What’s the best way to contact you?",
-            "How can I connect with you?",
-            "What’s your contact email?",
-            "How do I get ahold of you?",
-            "Can I email you?",
-            "What’s the email for STEM Inspires?",
-            "How do I reach out to you?",
-            "What’s your support email?",
-            "How can I contact your team?",
-            "What’s the way to get in touch?",
-            "Can you share your contact details?",
-            "How do I communicate with you?",
-            "What’s the email to reach you?",
-            "How can I send you a message?",
-            "What’s your contact method?"
-        ],
-        "responses": ["Email info@steminspires.tech for donations, questions, or partnerships."]
-    },
-    {
-        "intent": "ein_info",
-        "examples": [
-            "Are you registered?",
-            "What is your EIN?",
-            "Are you tax-exempt?",
-            "Is STEM Inspires a nonprofit?",
-            "What’s your tax ID?",
-            "Are you a 501(c)(3)?",
-            "What’s your EIN number?",
-            "Is your organization registered?",
-            "Do you have tax-exempt status?",
-            "What’s the EIN for STEM Inspires?",
-            "Are you a registered charity?",
-            "What’s your nonprofit ID?",
-            "Is STEM Inspires tax-exempt?",
-            "What’s your organization’s EIN?",
-            "Are you officially registered?",
-            "Do you have a tax ID number?",
-            "Is your group a 501(c)(3)?",
-            "What’s the tax ID for donations?",
-            "Are you a certified nonprofit?",
-            "What’s your charity registration?",
-            "Do you have an EIN for donations?",
-            "Is STEM Inspires a registered 501(c)(3)?"
-        ],
-        "responses": ["Yes — we are a 501(c)(3) tax-exempt nonprofit. EIN: 92-0345640."]
-    },
-    {
-        "intent": "location",
-        "examples": [
-            "Where are you based?",
-            "Your location?",
-            "Which country?",
-            "Where is STEM Inspires located?",
-            "What’s your base country?",
-            "Where do you operate from?",
-            "What’s your headquarters location?",
-            "Where are you situated?",
-            "In which country are you based?",
-            "Where’s your main office?",
-            "What’s the location of STEM Inspires?",
-            "Where do you run your programs?",
-            "What country do you work in?",
-            "Where is your organization based?",
-            "What’s your primary location?",
-            "Where are you located geographically?",
-            "What’s the base for STEM Inspires?",
-            "Where do you conduct your work?",
-            "In what region are you based?",
-            "Where’s your operational base?",
-            "What’s your home country?",
-            "Where is your group located?"
-        ],
-        "responses": ["We are based in Rwanda and expanding across central Africa."]
-    },
-    {
-        "intent": "robotics_focus",
-        "examples": [
-            "What do students learn?",
-            "What do you teach?",
-            "Focus of training?",
-            "What skills do kids learn?",
-            "What’s the focus of your programs?",
-            "What do you teach students?",
-            "What’s the training emphasis?",
-            "What do participants learn?",
-            "What skills are taught in FLL?",
-            "What’s the core of your teaching?",
-            "What do kids study in your programs?",
-            "What’s the main focus of robotics?",
-            "What do students gain from FLL?",
-            "What’s taught in your programs?",
-            "What skills do you focus on?",
-            "What do kids learn in robotics?",
-            "What’s the training about?",
-            "What do you teach in FLL?",
-            "What’s the learning focus?",
-            "What skills do students develop?",
-            "What’s the core training area?",
-            "What do kids get out of your program?"
-        ],
-        "responses": ["We teach robot design, programming, teamwork, and problem solving."]
-    },
-    {
-        "intent": "student_benefits",
-        "examples": [
-            "Why should kids join?",
-            "Benefits for students?",
-            "What do they gain?",
-            "What do kids get from FLL?",
-            "Why join your programs?",
-            "What’s the value for students?",
-            "What do students benefit from?",
-            "Why should students participate?",
-            "What’s in it for kids?",
-            "What do kids gain from robotics?",
-            "Why is FLL good for students?",
-            "What are the perks for kids?",
-            "What do students learn from joining?",
-            "Why should kids get involved?",
-            "What benefits do participants get?",
-            "What’s the advantage for students?",
-            "What do kids take away from FLL?",
-            "Why is your program good for kids?",
-            "What’s the benefit of joining?",
-            "What do students achieve in FLL?",
-            "Why should kids sign up?",
-            "What’s the value of your programs?"
-        ],
-        "responses": ["They learn STEM, teamwork, leadership, and real-world problem solving."]
-    },
-    {
-        "intent": "teacher_role",
-        "examples": [
-            "What about teachers?",
-            "Do you train teachers?",
-            "Role of coaches?",
-            "What do teachers do in FLL?",
-            "How are teachers involved?",
-            "Do you support teachers?",
-            "What’s the role of teachers?",
-            "How do coaches participate?",
-            "Do teachers get training?",
-            "What do coaches do in your program?",
-            "How do you involve teachers?",
-            "What’s the teacher’s job in FLL?",
-            "Do you prepare teachers for robotics?",
-            "What role do educators play?",
-            "How do teachers help teams?",
-            "What’s the coach’s responsibility?",
-            "Do you train educators?",
-            "How are teachers supported?",
-            "What do teachers contribute?",
-            "What’s the role of coaches in FLL?",
-            "How do educators get involved?",
-            "What do teachers do in robotics?"
-        ],
-        "responses": ["We train and support teachers to coach robotics teams effectively."]
-    },
-    {
-        "intent": "competition_format",
-        "examples": [
-            "How are competitions run?",
-            "Competition format?",
-            "How do matches work?",
-            "What’s the structure of competitions?",
-            "How do FLL competitions work?",
-            "What’s the format of your events?",
-            "How are robotics matches organized?",
-            "What’s the competition setup?",
-            "How do teams compete in FLL?",
-            "What’s the process for competitions?",
-            "How are your events structured?",
-            "What’s the competition style?",
-            "How do matches play out?",
-            "What’s the format of robotics events?",
-            "How do you run competitions?",
-            "What’s the structure of FLL matches?",
-            "How are tournaments organized?",
-            "What’s the competition process?",
-            "How do teams participate in events?",
-            "What’s the setup for competitions?",
-            "How do FLL tournaments work?",
-            "What’s the event format?"
-        ],
-        "responses": ["Teams compete by designing, programming, and presenting robot solutions."]
-    },
-    {
-        "intent": "africa_expansion",
-        "examples": [
-            "Do you work outside Rwanda?",
-            "Do you expand?",
-            "Where else are you?",
-            "Are you in other countries?",
-            "Do you operate beyond Rwanda?",
-            "What’s your expansion plan?",
-            "Are you growing outside Rwanda?",
-            "Where else do you work?",
-            "Do you have programs in other countries?",
-            "Are you expanding in Africa?",
-            "What’s your reach beyond Rwanda?",
-            "Do you work in other African nations?",
-            "Are you in central Africa?",
-            "What’s your plan for growth?",
-            "Do you operate in other regions?",
-            "Are you expanding FLL elsewhere?",
-            "Where are you growing next?",
-            "Do you have programs outside Rwanda?",
-            "What’s your expansion strategy?",
-            "Are you in other parts of Africa?",
-            "Where else is STEM Inspires active?",
-            "Do you plan to grow regionally?"
-        ],
-        "responses": ["Yes — we are expanding FLL across central Africa."]
-    },
-    {
-        "intent": "student_stories",
-        "examples": [
-            "Any success stories?",
-            "Student impact?",
-            "Examples of achievements?",
-            "What are some student successes?",
-            "Do you have student stories?",
-            "What’s the impact on students?",
-            "Can you share success examples?",
-            "What achievements have students made?",
-            "Any notable student stories?",
-            "What’s the impact of your programs?",
-            "Do students have big wins?",
-            "What are some student accomplishments?",
-            "Can you tell me about student successes?",
-            "What’s the effect on kids?",
-            "Any examples of student achievements?",
-            "What success stories do you have?",
-            "How have students benefited?",
-            "What are some team successes?",
-            "Do you have stories of student impact?",
-            "What’s the outcome for students?",
-            "Any standout student stories?",
-            "What have students achieved?"
-        ],
-        "responses": ["Our teams reach national levels, with champions like Maranyundo Girls."]
-    },
-    {
-        "intent": "mentoring",
-        "examples": [
-            "Do you mentor students?",
-            "Who mentors teams?",
-            "Do they get guidance?",
-            "How do you mentor kids?",
-            "Who guides the teams?",
-            "Do students get mentors?",
-            "What’s your mentoring process?",
-            "How are students mentored?",
-            "Who helps the teams?",
-            "Do you provide student guidance?",
-            "What’s the role of mentors?",
-            "How do mentors support teams?",
-            "Do kids get mentoring?",
-            "Who works with the students?",
-            "What’s the mentoring approach?",
-            "Do teams have mentors?",
-            "How do you guide participants?",
-            "Who provides team guidance?",
-            "Do you offer student mentoring?",
-            "What’s the support for teams?",
-            "How are mentors involved?",
-            "Do students get regular guidance?"
-        ],
-        "responses": ["Yes — our mentors guide students in robotics and teamwork."]
-    },
-    {
-        "intent": "kits",
-        "examples": [
-            "What kits do you use?",
-            "Do you use LEGO?",
-            "Robotics kits?",
-            "What equipment do you use?",
-            "Are LEGO kits part of FLL?",
-            "What robotics tools do you provide?",
-            "What kind of kits are used?",
-            "Do you use LEGO Education kits?",
-            "What materials are in your kits?",
-            "What robotics kits do teams get?",
-            "Are your kits LEGO-based?",
-            "What equipment is used in FLL?",
-            "What’s in the robotics kits?",
-            "Do you provide LEGO kits?",
-            "What tools do teams use?",
-            "What’s the kit for robotics?",
-            "Do you use specific robotics kits?",
-            "What materials do teams work with?",
-            "Are LEGO sets part of your program?",
-            "What kind of kits do you supply?",
-            "What’s included in your robotics kits?",
-            "Do teams get LEGO equipment?"
-        ],
-        "responses": ["We use LEGO Education kits, expansion sets, and competition mats."]
-    },
-    {
-        "intent": "program_cost",
-        "examples": [
-            "Is there a cost?",
-            "Do schools pay?",
-            "Program fees?",
-            "Is your program free?",
-            "What’s the cost for schools?",
-            "Are there fees for FLL?",
-            "Do schools need to pay?",
-            "What’s the price of the program?",
-            "Is there a cost to join?",
-            "Do you charge schools?",
-            "What’s the fee for participation?",
-            "Is FLL free for schools?",
-            "Are there program costs?",
-            "Do schools have to pay fees?",
-            "What’s the cost to join FLL?",
-            "Is there a fee for schools?",
-            "Do you charge for resources?",
-            "What’s the price for teams?",
-            "Is the program free for schools?",
-            "Are there costs for joining?",
-            "Do schools pay for kits?",
-            "What’s the financial commitment?"
-        ],
-        "responses": ["Schools in need get free kits and resources through our support."]
-    },
-    {
-        "intent": "annual_event",
-        "examples": [
-            "What is your biggest event?",
-            "Annual events?",
-            "Robotics festival?",
-            "What’s your main event?",
-            "Do you have yearly events?",
-            "What’s the big robotics event?",
-            "What’s your annual competition?",
-            "What’s the biggest robotics event?",
-            "Do you host a yearly festival?",
-            "What’s the main annual event?",
-            "What’s your biggest tournament?",
-            "Do you have an annual championship?",
-            "What’s the top event you run?",
-            "What’s the annual robotics event?",
-            "Do you organize yearly competitions?",
-            "What’s the biggest event of the year?",
-            "What’s your main robotics festival?",
-            "What’s the annual event for FLL?",
-            "Do you have a major yearly event?",
-            "What’s the top robotics competition?",
-            "What’s your biggest annual gathering?",
-            "What’s the main event each year?"
-        ],
-        "responses": ["The biggest event is the National Robotics Championship of Rwanda."]
-    },
-    {
-        "intent": "who_runs",
-        "examples": [
-            "Who runs STEM Inspires?",
-            "Leadership?",
-            "Who is behind it?",
-            "Who’s in charge of STEM Inspires?",
-            "Who leads your organization?",
-            "Who’s running the show?",
-            "Who founded STEM Inspires?",
-            "Who’s behind your programs?",
-            "Who manages STEM Inspires?",
-            "Who’s the leadership team?",
-            "Who started your organization?",
-            "Who’s at the helm of STEM Inspires?",
-            "Who runs your nonprofit?",
-            "Who’s the team behind STEM Inspires?",
-            "Who leads your programs?",
-            "Who’s in charge of your work?",
-            "Who founded your group?",
-            "Who’s leading STEM Inspires?",
-            "Who runs the organization?",
-            "Who’s behind the scenes?",
-            "Who’s the head of STEM Inspires?",
-            "Who manages your initiatives?"
-        ],
-        "responses": ["We are a women-founded and women-led organization."]
-    },
-    {
-        "intent": "nonprofit_status",
-        "examples": [
-            "Are you nonprofit?",
-            "Charity status?",
-            "Are you 501c3?",
-            "Is STEM Inspires a charity?",
-            "Are you a registered nonprofit?",
-            "What’s your nonprofit status?",
-            "Do you have 501(c)(3) status?",
-            "Is your organization a nonprofit?",
-            "Are you a charitable organization?",
-            "What’s your charity status?",
-            "Is STEM Inspires a 501(c)(3)?",
-            "Are you officially a nonprofit?",
-            "Do you have nonprofit registration?",
-            "Is your group a charity?",
-            "What’s the status of your organization?",
-            "Are you a tax-exempt nonprofit?",
-            "Is STEM Inspires a registered charity?",
-            "Do you have 501(c)(3) certification?",
-            "Are you a nonprofit entity?",
-            "What’s your organization’s status?",
-            "Is your group tax-exempt?",
-            "Are you a recognized nonprofit?"
-        ],
-        "responses": ["Yes — STEM Inspires is a registered 501(c)(3) nonprofit."]
-    },
-    {
-        "intent": "how_to_apply",
-        "examples": [
-            "How do schools apply?",
-            "Join program?",
-            "Apply to participate?",
-            "What’s the application process?",
-            "How can schools sign up?",
-            "How do schools join your program?",
-            "What’s the process to apply?",
-            "How do schools get started?",
-            "What’s the way for schools to apply?",
-            "How can a school join FLL?",
-            "What steps do schools take to apply?",
-            "How do schools enroll?",
-            "What’s the application for schools?",
-            "How can schools participate?",
-            "What’s the process for joining?",
-            "How do schools apply for FLL?",
-            "What’s the sign-up process?",
-            "How can a school get involved?",
-            "What’s the way to join your program?",
-            "How do schools register?",
-            "What’s the application procedure?",
-            "How can schools start with FLL?"
-        ],
-        "responses": ["Schools can apply through the 'Get Started' page on our site."]
-    },
-    {
-        "intent": "email",
-        "examples": [
-            "What is your email?",
-            "Contact email?",
-            "Support email?",
-            "What’s the email for STEM Inspires?",
-            "Can you share your email address?",
-            "What’s your support email?",
-            "How do I email you?",
-            "What’s the contact email address?",
-            "What email should I use?",
-            "Can I get your email?",
-            "What’s the email to contact you?",
-            "What’s your official email?",
-            "How can I email STEM Inspires?",
-            "What’s the email for support?",
-            "Can you give me your contact email?",
-            "What’s the email to reach you?",
-            "What’s your team’s email?",
-            "How do I send an email to you?",
-            "What’s the email for inquiries?",
-            "Can you share your support email?",
-            "What’s the email address for contact?",
-            "What’s the best email to use?"
-        ],
-        "responses": ["You can reach us at info@steminspires.tech."]
-    },
-    {
-        "intent": "national_reach",
-        "examples": [
-            "Do you work nationally?",
-            "Are you across Rwanda?",
-            "Which schools?",
-            "Do you operate nationwide?",
-            "Are you active across Rwanda?",
-            "What schools do you work with?",
-            "Is your program national?",
-            "Do you cover all of Rwanda?",
-            "Which schools are involved?",
-            "Are you nationwide in Rwanda?",
-            "What’s your reach in Rwanda?",
-            "Do you work with schools across Rwanda?",
-            "Is your program country-wide?",
-            "Which schools participate nationally?",
-            "Do you have a national presence?",
-            "What’s your coverage in Rwanda?",
-            "Are schools from all over Rwanda involved?",
-            "Do you engage schools nationwide?",
-            "What’s your national scope?",
-            "Are you active in all regions of Rwanda?",
-            "Which schools are part of your program?",
-            "Do you work with schools country-wide?"
-        ],
-        "responses": ["Yes — we work with schools nationwide to expand robotics."]
-    },
-    {
-        "intent": "student_waiting",
-        "examples": [
-            "Why are students waiting?",
-            "Why needed?",
-            "Why demand?",
-            "Why do students need your program?",
-            "What’s the demand for your work?",
-            "Why are kids waiting for robotics?",
-            "What’s the need for STEM Inspires?",
-            "Why is there a demand for FLL?",
-            "Why do students want your program?",
-            "What’s causing the wait for students?",
-            "Why is your program needed?",
-            "What’s the demand for robotics?",
-            "Why are students eager to join?",
-            "What’s the need for your work?",
-            "Why do kids need robotics programs?",
-            "What’s the reason for student demand?",
-            "Why are students waiting for FLL?",
-            "What’s driving the need for your program?",
-            "Why is there a wait for your programs?",
-            "Why do students need STEM Inspires?",
-            "What’s the demand for your initiatives?",
-            "Why are kids waiting to participate?"
-        ],
-        "responses": ["Many schools lacked resources or access until STEM Inspires stepped in."]
-    },
-    {
-        "intent": "why_robots",
-        "examples": [
-            "Why robotics?",
-            "Why focus on robots?",
-            "Why not other STEM?",
-            "Why choose robotics for kids?",
-            "What’s the focus on robotics?",
-            "Why do you teach robotics?",
-            "Why not other STEM fields?",
-            "What’s special about robotics?",
-            "Why is robotics your focus?",
-            "Why do you prioritize robots?",
-            "What’s the reason for robotics?",
-            "Why robotics over other STEM areas?",
-            "What makes robotics important?",
-            "Why focus on robotics programs?",
-            "Why do kids learn robotics?",
-            "What’s the value of robotics?",
-            "Why not focus on other sciences?",
-            "Why is robotics the main focus?",
-            "What’s the benefit of robotics?",
-            "Why choose robots for STEM?",
-            "Why do you emphasize robotics?",
-            "What’s the point of robotics?"
-        ],
-        "responses": ["Robotics teaches STEM, creativity, and teamwork in a fun way."]
-    },
-    {
-        "intent": "future_students",
-        "examples": [
-            "What’s next for students?",
-            "Future opportunities?",
-            "Next steps?",
-            "What’s the future for FLL students?",
-            "What opportunities await students?",
-            "What’s next after your program?",
-            "What can students do next?",
-            "What’s the path for students?",
-            "What opportunities do kids get?",
-            "What’s the next step for participants?",
-            "What’s in store for students?",
-            "What future paths do students have?",
-            "What’s the next phase for kids?",
-            "What opportunities follow FLL?",
-            "What’s the future for participants?",
-            "What can students pursue after?",
-            "What’s the next stage for students?",
-            "What opportunities are there post-FLL?",
-            "What’s the future for your students?",
-            "What’s next for kids in robotics?",
-            "What paths open for students?",
-            "What’s the future after your program?"
-        ],
-        "responses": ["We prepare students for engineering, innovation, and global opportunities."]
-    },
-    {
-        "intent": "recognition",
-        "examples": [
-            "Any recognition?",
-            "What do experts say?",
-            "Who supports you?",
-            "Have you received any awards?",
-            "What’s the feedback on your work?",
-            "Who recognizes your programs?",
-            "Do experts praise your work?",
-            "What’s the reputation of STEM Inspires?",
-            "Have you been acknowledged?",
-            "Who supports your initiatives?",
-            "What do leaders say about you?",
-            "Any notable recognition?",
-            "What’s the expert opinion on you?",
-            "Who endorses STEM Inspires?",
-            "Have you gotten any praise?",
-            "What’s the feedback from experts?",
-            "Do you have any accolades?",
-            "Who’s backing your programs?",
-            "What’s the recognition for your work?",
-            "Have you been honored?",
-            "What do professionals say about you?",
-            "Any awards or support for you?"
-        ],
-        "responses": ["Leaders like Olajide Ade Ajayi of Coderina praise our students’ dedication."]
-    }
+            {
+    "intent": "about_stem_inspires",
+    "examples": [
+        "What is STEM Inspires?",
+        "Tell me about STEM Inspires",
+        "Can you explain STEM Inspires?",
+        "Who is STEM Inspires for?",
+        "What does STEM Inspires do?",
+        "Give me details on STEM Inspires",
+        "What is the mission of STEM Inspires?",
+        "What is STEM Inspires all about?",
+        "Can you describe STEM Inspires?",
+        "Tell me more about STEM Inspires",
+        "What programs does STEM Inspires offer?",
+        "Who does STEM Inspires inspire?",
+        "What is the goal of STEM Inspires?",
+        "Why was STEM Inspires created?",
+        "What is STEM Inspires mission statement?",
+        "What kind of curriculum does STEM Inspires have?",
+        "What makes STEM Inspires unique?",
+        "Can you share info about STEM Inspires?",
+        "What is the purpose of STEM Inspires?",
+        "What is STEM Inspires known for?"
+    ],
+    "responses": [
+        "STEM Inspires is focused on inspiring the next generation of innovators through inclusive, exciting, and hands-on robotics curriculums."
+    ]
+},
+{
+    "intent": "stem_inspires_mission",
+    "examples": [
+        "What is STEM Inspires' mission?",
+        "Can you tell me the mission of STEM Inspires?",
+        "What does STEM Inspires aim to do?",
+        "Explain the mission of STEM Inspires",
+        "What is the goal of STEM Inspires?",
+        "Why was STEM Inspires created?",
+        "Tell me about STEM Inspires' purpose",
+        "What is STEM Inspires trying to achieve?",
+        "What does STEM Inspires focus on?",
+        "Can you describe STEM Inspires' mission?",
+        "What is STEM Inspires' objective?",
+        "What is STEM Inspires all about?",
+        "Why is STEM Inspires important?",
+        "What are STEM Inspires' aims?",
+        "What is the purpose behind STEM Inspires?",
+        "What does STEM Inspires do for kids?",
+        "How does STEM Inspires help children?",
+        "What is STEM Inspires' approach to learning?",
+        "How does STEM Inspires teach robotics?",
+        "What age group does STEM Inspires target?"
+    ],
+    "responses": [
+        "Our mission is to bring FIRST LEGO League (FLL) robotics to children ages 9 to 16, teaching them the basics of robot design, programming, and problem solving through a competitive and engaging hands-on learning experience."
+    ]
+},{
+    "intent": "stem_inspires_vision",
+    "examples": [
+        "What is STEM Inspires' vision?",
+        "Can you tell me the vision of STEM Inspires?",
+        "What does STEM Inspires hope to achieve?",
+        "Explain the vision of STEM Inspires",
+        "What is the long-term goal of STEM Inspires?",
+        "What future does STEM Inspires want to create?",
+        "What is STEM Inspires striving for?",
+        "What is the dream of STEM Inspires?",
+        "What is STEM Inspires' ultimate aim?",
+        "How does STEM Inspires see the future?",
+        "What impact does STEM Inspires want to make?",
+        "What does STEM Inspires want for young people?",
+        "What is the purpose of STEM Inspires' vision?",
+        "How does STEM Inspires inspire youth?",
+        "What does STEM Inspires encourage in children?",
+        "What is STEM Inspires' approach to STEM confidence?",
+        "What kind of future does STEM Inspires imagine?",
+        "What is STEM Inspires' goal in robotics?",
+        "How does STEM Inspires use robotics to help the world?",
+        "What world does STEM Inspires want to create?"
+    ],
+    "responses": [
+        "Our vision is to create a world where young people dream big, develop confidence in STEM, and use robotics to innovate, solve real-world problems, and shape a better future."
+    ]
+},
+{
+    "intent": "stem_inspires_testimonials",
+    "examples": [
+        "What do people say about STEM Inspires?",
+        "Can you share reviews about STEM Inspires?",
+        "What are testimonials for STEM Inspires?",
+        "Who has spoken about STEM Inspires?",
+        "What do others think of STEM Inspires?",
+        "Can you tell me what people say about STEM Inspires?",
+        "Are there any success stories from STEM Inspires?",
+        "What are the experiences of students at STEM Inspires?",
+        "What do experts say about STEM Inspires?",
+        "Any feedback on STEM Inspires programs?",
+        "What do parents and students say about STEM Inspires?",
+        "Can you share opinions on STEM Inspires?",
+        "What have people said about STEM Inspires?",
+        "How do people describe STEM Inspires?",
+        "Any recommendations for STEM Inspires?",
+        "What are some comments from STEM Inspires participants?",
+        "What do leaders in STEM education say about STEM Inspires?",
+        "How do students feel about STEM Inspires?",
+        "What do teachers think about STEM Inspires?",
+        "Can you give examples of positive feedback for STEM Inspires?"
+    ],
+    "responses": [
+        "People say wonderful things about STEM Inspires. For example:\n\n- Sandra Kayitaba, Writer for the Digital Transformation Center of Rwanda, says: “Robotics education is a critical component of STEM education in Rwanda, preparing students for a digital future, fostering innovation and creativity.”\n\n- Olajide Ade Ajayi, Regional Coordinator of FLL and Founder of Coderina, says: “The enthusiasm and dedication shown by the participating teams are a testament to the potential of the young people in Africa.”\n\n- Celestine Ineza, a STEM Inspires student, says: “I had no idea how robots worked when I first joined the robotics team, but now I can put up a program and run it myself or with my team.”"
+    ]
+},
+{
+    "intent": "fll_program_info",
+    "examples": [
+        "How can I bring FIRST LEGO League to my school?",
+        "I want to participate in the FLL program",
+        "Can STEM Inspires help my school join FLL?",
+        "How do I start a robotics team at school?",
+        "I’m interested in starting a FIRST LEGO League team",
+        "How do we get FLL at our school?",
+        "Who can help us join the FLL program?",
+        "Can I contact a mentor for FLL?",
+        "How do I get students involved in FLL?",
+        "How can my school participate in FIRST LEGO League?",
+        "What are the steps to join FLL?",
+        "Can STEM Inspires support our FLL team?",
+        "I want to start a robotics team for my students",
+        "How can I help students join FLL?",
+        "How do we grow the FLL vision at our school?",
+        "Can I sponsor a robotics team?",
+        "How do we get kits and mentorship for FLL?",
+        "What does sponsoring a team involve?",
+        "How do I contribute to STEM Inspires’ robotics program?",
+        "I want to enable students to participate in robotics competitions"
+    ],
+    "responses": [
+        "If you’re interested in bringing the FIRST LEGO League (FLL) program to your school, contact us and a mentor will get in touch with you. You can start a team to help a new generation of aspiring engineers, or become a sponsor to support students with kits, mentorship, and competition access."
+    ]
+},
+{
+    "intent": "share_ideas",
+    "examples": [
+        "How can I share ideas for LEGO League?",
+        "I have ideas for this year's FLL theme",
+        "Can I suggest ideas for the robotics team?",
+        "How do I contribute my ideas to STEM Inspires?",
+        "I want to share my FLL theme suggestions",
+        "Where can I submit my ideas for LEGO League?",
+        "Can I send ideas to help the teams?",
+        "I have cool robotics ideas to share",
+        "How do I share creative ideas for FLL?",
+        "Can I participate by sharing my ideas?",
+        "Where do I share my concepts for robotics?",
+        "I want to inspire the teams with my ideas",
+        "Can I help by giving suggestions?",
+        "How can I contribute ideas to the teams?",
+        "Can I submit ideas for this year’s theme?"
+    ],
+    "responses": [
+        "If you have cool ideas for this year's LEGO League theme, you can share them with our teams to inspire and guide their projects."
+    ]
+}
+,{
+    "intent": "donate_lego_pieces",
+    "examples": [
+        "Can I send used LEGO pieces?",
+        "I have retired LEGO devices or tools",
+        "How do I donate LEGO kits?",
+        "Where can I send my old LEGO pieces?",
+        "Can I give used robotics tools to STEM Inspires?",
+        "I want to donate LEGO sets",
+        "How do I send LEGO materials to the teams?",
+        "Is there a way to contribute used LEGO pieces?",
+        "Can I help by giving retired LEGO items?",
+        "Where should I send my old robotics equipment?",
+        "I want to recycle my LEGO pieces for STEM Inspires",
+        "How can I provide used tools for the program?",
+        "Can I contribute my retired LEGO devices?",
+        "I have spare LEGO pieces to give",
+        "Can I support STEM Inspires by sending LEGO kits?"
+    ],
+    "responses": [
+        "If you have retired LEGO devices or tools, you can contact us via the form to donate them and support our teams."
+    ]
+}
+,{
+    "intent": "volunteer_in_rwanda",
+    "examples": [
+        "How can I help on site in Rwanda?",
+        "I want to volunteer with STEM Inspires",
+        "Can I join the robotics team in Rwanda?",
+        "Where can I volunteer for LEGO League?",
+        "I want to help build robots with the team",
+        "How do I get involved on site?",
+        "Can I support STEM Inspires in person?",
+        "I live in Rwanda and want to help",
+        "Is there a way to volunteer locally?",
+        "How can I assist the teams directly?",
+        "I want to contribute by helping hands-on",
+        "Where can I join STEM Inspires activities?",
+        "Can I participate in building robots?",
+        "How do I sign up to volunteer in Rwanda?",
+        "I want to help STEM Inspires in person"
+    ],
+    "responses": [
+        "If you live in Rwanda, you can join us on site and help build with the team. Let us know if you want to volunteer!"
+    ]
+}
+,{
+    "intent": "fll_program_overview",
+    "examples": [
+        "What is the FIRST LEGO League?",
+        "Tell me about FIRST LEGO League",
+        "Can you explain FLL?",
+        "What does FIRST LEGO League do?",
+        "Who can participate in FIRST LEGO League?",
+        "What age group is FLL for?",
+        "How does FLL teach STEM?",
+        "What skills do students learn in FIRST LEGO League?",
+        "How does FIRST LEGO League work?",
+        "Can you describe the FLL program?",
+        "What is the goal of FIRST LEGO League?",
+        "How do students benefit from FLL?",
+        "What makes FIRST LEGO League unique?",
+        "Where is FLL being introduced in Africa?",
+        "Which schools are connected to FLL?",
+        "How can children join FIRST LEGO League?",
+        "What kind of projects do students do in FLL?",
+        "Why is FIRST LEGO League important?",
+        "How does FLL prepare students for the future?",
+        "Tell me about the FLL robotics program"
+    ],
+    "responses": [
+        "FIRST LEGO League (FLL) introduces science, technology, engineering, and math (STEM) to children ages 9–16 through fun and exciting hands-on learning. Participants gain real-world problem-solving experiences through a guided, global robotics program, helping students and teachers build a better future together. We are bringing this program to Central Africa, connecting schools across the region."
+    ]
+}
+,{
+    "intent": "fll_connected_schools",
+    "examples": [
+        "Which schools are part of FIRST LEGO League?",
+        "What schools are connected to FLL?",
+        "Can you list the schools participating in FLL?",
+        "Which schools are joining the robotics program?",
+        "What schools are involved in FIRST LEGO League?",
+        "Where is FLL being introduced?",
+        "Which schools in Central Africa have FLL teams?",
+        "Tell me the names of schools connected to FLL",
+        "What schools are taking part in FLL activities?",
+        "Which schools are collaborating with STEM Inspires for FLL?",
+        "Can you show me FLL schools?",
+        "How many schools are participating in FIRST LEGO League?",
+        "What schools are engaged in robotics through FLL?",
+        "Which schools have STEM Inspires robotics teams?",
+        "List the schools involved in FLL",
+        "Which schools are supported by STEM Inspires for FLL?",
+        "Can you tell me about FLL partner schools?",
+        "What schools are currently connected to FLL?",
+        "Where can I find participating FLL schools?",
+        "Which schools are building robots with FLL?"
+    ],
+    "responses": [
+        "We are connecting several schools in Central Africa to the FIRST LEGO League program. You can contact us to find out which schools are participating or to get involved with a local team."
+    ]
+}
+,
+{
+    "intent": "fll_discovering_interest",
+    "examples": [
+        "How do schools learn about FIRST LEGO League?",
+        "How does STEM Inspires introduce FLL to schools?",
+        "What is the first step to get a school involved?",
+        "How do students and parents find out about FLL?",
+        "How do you share FLL with schools?",
+        "How does STEM Inspires discover interest in FLL?",
+        "What do schools need to know about FIRST LEGO League?",
+        "How do students get excited about FLL?",
+        "How is FLL presented to schools and governments?",
+        "How do kids learn about the FLL opportunity?",
+        "What is the process for introducing FLL to a school?",
+        "How do parents hear about robotics at school?",
+        "How do you promote FLL in local schools?",
+        "How are schools contacted for FLL?",
+        "How do students express interest in FLL?",
+        "What is the first step to join FLL?",
+        "How does STEM Inspires get schools interested?",
+        "How do you tell schools about robotics programs?",
+        "How do students learn about STEM Inspires' project?",
+        "How do schools get to know about FLL teams?"
+    ],
+    "responses": [
+        "The first step in recruiting schools is discovering interest. STEM Inspires shares what FIRST LEGO League is about with schools, students, and governments. Often, parents say their kids have been waiting for an opportunity like this at their school."
+    ]
+}
+,{
+    "intent": "fll_addressing_roadblocks",
+    "examples": [
+        "What if a school lacks resources for FLL?",
+        "How do you handle schools far from the city?",
+        "Can STEM Inspires help schools without internet?",
+        "What support is given to schools with roadblocks?",
+        "How do you fix problems preventing a team?",
+        "How are schools assisted in starting FLL teams?",
+        "What happens if a school can’t afford kits?",
+        "How does STEM Inspires support remote schools?",
+        "How do you overcome challenges for FLL participation?",
+        "Do you provide workshops for team coaches?",
+        "How do you help schools build robotics teams?",
+        "What solutions are offered for resource-limited schools?",
+        "How do schools get help starting FLL teams?",
+        "How do you manage obstacles for FLL participation?",
+        "Can schools get assistance to join FLL?",
+        "What does STEM Inspires do when a school faces challenges?",
+        "How are roadblocks handled in FLL recruitment?",
+        "How do you ensure schools can participate despite challenges?",
+        "Do you help train coaches for FLL?",
+        "How is STEM Inspires improving access to FLL?"
+    ],
+    "responses": [
+        "Whether a school is far from the city, lacks internet, or doesn’t have resources to start a team, STEM Inspires addresses these roadblocks. We also host capacity-building workshops for coaches to enhance their abilities to support the teams they manage."
+    ]
+}
+,{
+    "intent": "fll_getting_started",
+    "examples": [
+        "How does STEM Inspires start a team?",
+        "What is the process for starting FLL?",
+        "How do students join FIRST LEGO League?",
+        "What happens when a school decides to participate?",
+        "How is FLL presented to students?",
+        "How do you get students excited about FLL?",
+        "What are the first steps for a new team?",
+        "How does STEM Inspires introduce FLL to students?",
+        "How is the program explained to kids?",
+        "What do presentations for FLL include?",
+        "How do you engage students in robotics?",
+        "How is interest turned into action for FLL?",
+        "How do students start building robots?",
+        "How do you kick off a new FLL team?",
+        "What is included in the STEM Inspires FLL presentation?",
+        "How do you highlight learning and community experiences?",
+        "How do students understand the benefits of FLL?",
+        "How does STEM Inspires gather excitement for FLL?",
+        "What is the first session like for students?",
+        "How do kids see the value of joining FLL?"
+    ],
+    "responses": [
+        "STEM Inspires meets with students and presents the FIRST LEGO League. The presentation highlights the learning and community experiences every member will have if they join, creating excitement and interest in getting started."
+    ]
+},
+{
+    "intent": "fll_continuous_support",
+    "examples": [
+        "Does STEM Inspires support teams after they start?",
+        "How do you help students build robots?",
+        "What support is given to new FLL teams?",
+        "Do team leaders get guidance?",
+        "How do students get help learning robotics?",
+        "Does STEM Inspires provide mentorship?",
+        "How is the first few months of FLL supported?",
+        "What help is available for students and coaches?",
+        "How do you support team management?",
+        "What resources are provided to teams?",
+        "Do you assist in robot design and programming?",
+        "How do students get guidance during FLL?",
+        "Is there ongoing support for new teams?",
+        "How do you ensure students succeed in FLL?",
+        "What help is given during the first months of learning?",
+        "How does STEM Inspires manage team challenges?",
+        "How do coaches get support from STEM Inspires?",
+        "Are teams assisted throughout the learning process?",
+        "How do you maintain communication with team leaders?",
+        "How does STEM Inspires help teams stay on track?"
+    ],
+    "responses": [
+        "Learning how to build robots isn't easy. STEM Inspires provides continuous support through direct communication with team leaders, helping with development, building, education, and management during the first months of learning."
+    ]
+},{
+    "intent": "fll_build_excited_children",
+    "examples": [
+        "How does STEM Inspires build excitement in children?",
+        "How do students get excited about FLL?",
+        "How do you motivate kids to join the robotics program?",
+        "What is done to engage students in FLL?",
+        "How do you generate interest among students?",
+        "How does STEM Inspires prepare children for robotics?",
+        "How are schools visited for FLL?",
+        "What is done to get teachers and heads of school on board?",
+        "How do you ensure students commit to FLL?",
+        "How do you inspire students to participate?",
+        "What steps are taken to excite children about robotics?",
+        "How are students introduced to FLL?",
+        "How do you showcase the FLL program to schools?",
+        "How do you make kids eager to join the program?",
+        "How is excitement generated for FLL teams?",
+        "How do you encourage student participation?",
+        "What is done to engage the school community?",
+        "How do you make students ready to commit?",
+        "How are children motivated for robotics competitions?",
+        "How do you get teachers and students involved in FLL?"
+    ],
+    "responses": [
+        "STEM Inspires builds excitement by visiting schools to showcase the FLL program. We talk to heads of school, teachers, and students to generate a vision for what’s possible and ensure everyone is ready to commit 100%."
+    ]
+},
+{
+    "intent": "fll_build_resources",
+    "examples": [
+        "How does STEM Inspires provide resources for FLL?",
+        "What support is given to schools that can't afford kits?",
+        "How do schools get starter kits for FLL?",
+        "Does STEM Inspires provide expansion sets and mats?",
+        "How are schools supported financially or with materials?",
+        "What resources do teams get to start FLL?",
+        "Can STEM Inspires help with competition materials?",
+        "How do schools receive robotics kits?",
+        "What does STEM Inspires donate to new teams?",
+        "How are resource-limited schools supported?",
+        "How do you ensure schools have necessary materials?",
+        "What do you provide for schools joining FLL?",
+        "Do teams get help with kits and competition sets?",
+        "How are schools equipped for robotics competitions?",
+        "How does STEM Inspires support schools with limited budgets?",
+        "What materials are provided to schools?",
+        "How do students get the tools they need?",
+        "What resources help teams succeed in FLL?",
+        "How do you make sure schools can participate?",
+        "What is included in the resource support for FLL?"
+    ],
+    "responses": [
+        "STEM Inspires builds the resource base by donating starter kits, expansion sets, and competition mats to schools that are interested in the competition but can’t afford them on their own."
+    ]
+},
+{
+    "intent": "fll_build_engineers",
+    "examples": [
+        "How does STEM Inspires develop engineers?",
+        "How do teams reach their full potential?",
+        "What kind of support is given to students in FLL?",
+        "Are mentoring sessions provided for teams?",
+        "How do you help teams improve continuously?",
+        "What online resources are shared with teams?",
+        "How often do mentors meet with teams?",
+        "How do students get guidance on robotics?",
+        "How does STEM Inspires ensure learning success?",
+        "What support is given to engineers in training?",
+        "How are students helped to build skills?",
+        "How do you host mentoring sessions?",
+        "How do teams get technical support?",
+        "How do you ensure teams achieve their goals?",
+        "How do students develop STEM and robotics skills?",
+        "What ongoing support is provided?",
+        "How do teams improve through STEM Inspires?",
+        "How do students benefit from mentoring sessions?",
+        "How are engineers nurtured in FLL?",
+        "What steps are taken to develop young engineers?"
+    ],
+    "responses": [
+        "STEM Inspires builds engineers through continuous support, hosting mentoring sessions, sharing online resources, and meeting with the team weekly to help them reach their full potential."
+    ]
+}
+,{
+    "intent": "fll_take_to_your_school",
+    "examples": [
+        "How can I bring FLL to my school?",
+        "I want to start a FIRST LEGO League team",
+        "How do schools participate in FLL?",
+        "Can STEM Inspires help my school join FLL?",
+        "What are the steps to start a robotics team?",
+        "Who can I contact to bring FLL to my school?",
+        "How do we get students involved in FLL?",
+        "How do we join the FIRST LEGO League program?",
+        "Can my school get support for FLL?",
+        "How do we start participating in FLL?",
+        "What is required to bring FLL to a school?",
+        "How can we initiate a robotics program?",
+        "Where do I get mentorship for starting a team?",
+        "How do we start building robots at school?",
+        "Who helps schools join FIRST LEGO League?",
+        "What support is available to new FLL schools?",
+        "How do we get starter kits for our school?",
+        "Can STEM Inspires guide schools in FLL?",
+        "How do we implement FLL at our school?",
+        "How do students start learning robotics through FLL?"
+    ],
+    "responses": [
+        "If you want to take FIRST LEGO League to your school, STEM Inspires can help you start a team, provide resources, and guide students through the program to ensure success."
+    ]
+}
+,{
+    "intent": "donation_options",
+    "examples": [
+        "How can I donate to STEM Inspires?",
+        "What donation options are available?",
+        "Can I give a one-time donation?",
+        "How do I make a monthly contribution?",
+        "What amounts can I donate?",
+        "Can I fund a student?",
+        "How do I start a team with a donation?",
+        "Is there a way to fund a whole team?",
+        "Can I enter a custom donation amount?",
+        "What does a $10 donation do?",
+        "What is included in a $100 donation?",
+        "How much does it cost to kit-start a team?",
+        "How can I support a team with $2000?",
+        "Can I choose how much to donate?",
+        "Are there recurring donation options?",
+        "What are the benefits of monthly donations?",
+        "Can I donate to STEM Inspires online?",
+        "How do I contribute to student programs?",
+        "How do I fund STEM Inspires projects?",
+        "What are the donation tiers for STEM Inspires?"
+    ],
+    "responses": [
+        "You can choose to make a one-time or monthly donation. Options include:\n- $10 — 1-time transport\n- $100 — Fund a student\n- $510 — “Kit-Start” a team\n- $2000 — Fund a team\n- Custom amount — donate any amount you choose."
+    ]
+}
+,{
+    "intent": "stem_inspires_commitment",
+    "examples": [
+        "What is STEM Inspires' commitment?",
+        "How is STEM Inspires committed to students?",
+        "What does STEM Inspires stand for?",
+        "Can you explain STEM Inspires' mission regarding teams?",
+        "How does STEM Inspires support STEM education?",
+        "What is the company’s approach to mentoring teams?",
+        "How does STEM Inspires help teams achieve excellence?",
+        "What is STEM Inspires’ goal for students?",
+        "How does STEM Inspires foster an inclusive environment?",
+        "What support does STEM Inspires provide to schools?",
+        "How does STEM Inspires guide teams in competitions?",
+        "What resources does STEM Inspires offer?",
+        "How does STEM Inspires develop students' skills?",
+        "What does STEM Inspires do for championship-level performance?",
+        "How does STEM Inspires encourage innovation?",
+        "What is STEM Inspires’ philosophy for learning?",
+        "How does STEM Inspires motivate students?",
+        "What is STEM Inspires’ promise to teams?",
+        "How does STEM Inspires create opportunities for excellence?",
+        "What makes STEM Inspires committed to STEM education?"
+    ],
+    "responses": [
+        "STEM Inspires is committed to empowering teams to achieve excellence in STEM. We provide mentorship, resources, and guidance to schools and student groups, creating an inclusive and motivating environment for teams to learn, innovate, and reach championship-level performance."
+    ]
+}
+,
+{
+    "intent": "stem_inspires_commitment_short",
+    "examples": [
+        "What is STEM Inspires committed to?",
+        "How does STEM Inspires help teams?",
+        "What support does STEM Inspires offer?",
+        "Can you explain STEM Inspires' goal?",
+        "How does STEM Inspires empower students?",
+        "What does STEM Inspires do for teams?",
+        "How does STEM Inspires encourage learning?",
+        "What is STEM Inspires’ promise?",
+        "How does STEM Inspires motivate students?",
+        "What is STEM Inspires’ role in STEM education?"
+    ],
+    "responses": [
+        "STEM Inspires helps teams excel in STEM by providing mentorship, resources, and guidance, creating a supportive and motivating environment for learning, innovation, and success."
+    ]
+}
+,{
+    "intent": "stem_inspires_champions",
+    "examples": [
+        "Who are the STEM Inspires champions?",
+        "Tell me about the winners of STEM Inspires competitions",
+        "Which schools have won FIRST LEGO League?",
+        "Who are the national champions?",
+        "Can you list past STEM Inspires winners?",
+        "Which schools dominated the competitions?",
+        "Tell me about GSOB 2025 champions",
+        "Who won the 2024 Woman in STEM award?",
+        "What school won in 2023?",
+        "Can you show the champions gallery?",
+        "Which teams excelled in national competitions?",
+        "Who are the top STEM Inspires students?",
+        "Can you tell me about Christ Roi winners?",
+        "Which girls’ schools have won awards?",
+        "What schools have achieved national recognition?",
+        "Tell me about the champion teams in Rwanda",
+        "Who are the leaders in STEM competitions?",
+        "Which schools performed best at district and province levels?",
+        "Who has been awarded for robotics excellence?",
+        "Can you give details of past champions?"
+    ],
+    "responses": [
+        "Here are some of the STEM Inspires champions:\n\n- **G.S.O.B | 2025** (Season: Submerged – 2025): GSOB Indatwa n’Inkesha won the national competition with an outstanding robot design.\n\n- **Christ Roi | 2024** (Season: Masterpiece – 2024): Collège du Christ-Roi de Nyanza rose from second place at the district level to national champions.\n\n- **Maranyundo | 2023** (Season: Energize – 2023): Maranyundo Girls School advanced from fourth at district level to dominate nationals through teamwork and innovation."
+    ]
+}
+,{
+    "intent": "first_tech_challenge_intro",
+    "examples": [
+        "What is the FIRST Tech Challenge?",
+        "Tell me about the FIRST Tech Challenge",
+        "Can you explain FTC?",
+        "How does FTC inspire students?",
+        "What is the goal of the FIRST Tech Challenge?",
+        "Who can participate in FTC?",
+        "How does FTC teach robotics and teamwork?",
+        "What skills do students gain from FTC?",
+        "How does FTC help with real-world problem solving?",
+        "Can you describe the FIRST Tech Challenge program?",
+        "Why should students join FTC?",
+        "How does FTC develop innovators?",
+        "What is included in the FIRST Tech Challenge?",
+        "How can students join FTC?",
+        "What is the purpose of the FIRST Tech Challenge?",
+        "How does FTC support STEM education?",
+        "What makes FTC different from other programs?",
+        "How do students benefit from joining FTC?",
+        "What kind of competitions does FTC involve?",
+        "Why is FTC important for young innovators?"
+    ],
+    "responses": [
+        "The FIRST Tech Challenge (FTC) inspires the next generation of innovators through robotics, teamwork, and real-world problem solving. Students can join the challenge to develop their STEM skills and creativity."
+    ]
+}
+,{
+    "intent": "ftc_connected_schools",
+    "examples": [
+        "Which schools are participating in the FIRST Tech Challenge?",
+        "Can you list schools connected to FTC?",
+        "What schools are involved in FTC?",
+        "Which schools are joining the robotics challenge?",
+        "Tell me about the schools in FTC",
+        "Where is FTC being introduced?",
+        "Which schools are taking part in FTC competitions?",
+        "Can you name the FTC schools?",
+        "Which schools are involved in STEM Inspires FTC program?",
+        "What schools are connected to the challenge?",
+        "Where are the FTC teams based?",
+        "Which schools in Rwanda participate in FTC?",
+        "Who are the FTC school partners?",
+        "What schools are supported in FTC?",
+        "Which schools are building robots for FTC?",
+        "Can you show the FTC champions and schools?",
+        "Which schools are actively competing in FTC?",
+        "What schools are part of STEM Inspires FTC program?",
+        "Where can I find schools connected to FTC?",
+        "Which schools are part of the robotics challenge?"
+    ],
+    "responses": [
+        "The following schools are connected to the FIRST Tech Challenge (FTC):\n\n- College Saint Andrew, Kigali\n- Christ Roi Nyanza, Rwanda\n- Gashora Girls Academy, Rwanda\n- Maranyundo Girls School, Rwanda"
+    ]
+}
+,{
+    "intent": "sisters_in_stem",
+    "examples": [
+        "Who started STEM Inspires?",
+        "Tell me about the founders of STEM Inspires",
+        "Who are Amelia and Vienna?",
+        "How did STEM Inspires begin?",
+        "Who founded STEM Inspires in Rwanda?",
+        "Can you explain the story of the sisters in STEM?",
+        "Who inspires STEM students through STEM Inspires?",
+        "How did Amelia and Vienna start STEM Inspires?",
+        "Who are the leaders behind STEM Inspires?",
+        "What is the background of STEM Inspires founders?"
+    ],
+    "responses": [
+        "Amelia and Vienna founded STEM Inspires in Rwanda in 2022. Having grown up involved with FIRST, they use their experience to inspire students to embrace the challenge, creativity, and fun of STEM."
+    ]
+},{
+    "intent": "team_amelia_wyler",
+    "examples": [
+        "Who is Amelia Wyler?",
+        "Tell me about Amelia Wyler",
+        "What does Amelia Wyler do at STEM Inspires?",
+        "Who are the founders of STEM Inspires?",
+        "Can you give details about Amelia Wyler?"
+    ],
+    "responses": [
+        "Amelia Wyler is a Founder of STEM Inspires. You can contact her at amelia@steminspires.tech."
+    ]
+}
+,{
+    "intent": "team_vienna_wyler",
+    "examples": [
+        "Who is Vienna Wyler?",
+        "Tell me about Vienna Wyler",
+        "What does Vienna Wyler do at STEM Inspires?",
+        "Can you give details about Vienna Wyler?"
+    ],
+    "responses": [
+        "Vienna Wyler is a Founder of STEM Inspires. You can contact her at vienna@steminspires.tech."
+    ]
+}
+,{
+    "intent": "team_happy_herman",
+    "examples": [
+        "Who is Happy Herman?",
+        "Tell me about Happy Herman",
+        "What does Happy Herman do at STEM Inspires?",
+        "Can you give details about Happy Herman?"
+    ],
+    "responses": [
+        "Happy Herman is the Human Resources Manager at STEM Inspires. You can contact him at happy@steminspires.tech."
+    ]
+}
+,{
+    "intent": "team_philemon_mucyo",
+    "examples": [
+        "Who is Philemon Mucyo?",
+        "Tell me about Philemon Mucyo",
+        "What does Philemon Mucyo do at STEM Inspires?",
+        "Can you give details about Philemon Mucyo?"
+    ],
+    "responses": [
+        "Philemon Mucyo is a Robotics Trainer at STEM Inspires. You can contact him at philemon@steminspires.tech."
+    ]
+}
+,{
+    "intent": "team_prudence_ayivi",
+    "examples": [
+        "Who is Prudence Ayivi?",
+        "Tell me about Prudence Ayivi",
+        "What does Prudence Ayivi do at STEM Inspires?",
+        "Can you give details about Prudence Ayivi?"
+    ],
+    "responses": [
+        "Prudence Ayivi is a STEM Coach at STEM Inspires. You can contact her at prudence@steminspires.tech."
+    ]
+}
+,{
+    "intent": "team_fidele_manirafasha",
+    "examples": [
+        "Who is Fidèle Manirafasha?",
+        "Tell me about Fidèle Manirafasha",
+        "What does Fidèle Manirafasha do at STEM Inspires?"
+    ],
+    "responses": [
+        "Fidèle Manirafasha is a Robotics Trainer at STEM Inspires."
+    ]
+}
+,{
+    "intent": "team_ismael_kaleeba",
+    "examples": [
+        "Who is Ismael Kaleeba?",
+        "Tell me about Ismael Kaleeba",
+        "What does Ismael Kaleeba do at STEM Inspires?"
+    ],
+    "responses": [
+        "Ismael Kaleeba is a Student Ambassador at STEM Inspires."
+    ]
+}
+,{
+    "intent": "team_jeremie_habumugisha",
+    "examples": [
+        "Who is Jeremie Habumugisha?",
+        "Tell me about Jeremie Habumugisha",
+        "What does Jeremie Habumugisha do at STEM Inspires?"
+    ],
+    "responses": [
+        "Jeremie Habumugisha is a Student Mentor at STEM Inspires."
+    ]
+}
+,{
+    "intent": "team_ishimwe_yves",
+    "examples": [
+        "Who is Ishimwe Yves?",
+        "Tell me about Ishimwe Yves",
+        "What does Ishimwe Yves do at STEM Inspires?"
+    ],
+    "responses": [
+        "Ishimwe Yves is a Student Ambassador at STEM Inspires."
+    ]
+}
+,{
+    "intent": "team_alma_power",
+    "examples": [
+        "Who is Alma Power?",
+        "Tell me about Alma Power",
+        "What does Alma Power do at STEM Inspires?"
+    ],
+    "responses": [
+        "Alma Power is a Robotics Trainer at STEM Inspires."
+    ]
+}
+,{
+    "intent": "team_owen_cooper",
+    "examples": [
+        "Who is Owen Cooper?",
+        "Tell me about Owen Cooper",
+        "What does Owen Cooper do at STEM Inspires?"
+    ],
+    "responses": [
+        "Owen Cooper is a Robotics Trainer at STEM Inspires."
+    ]
+}
+,{
+    "intent": "greeting",
+    "examples": [
+        "Hi",
+        "Hello",
+        "Hey",
+        "Good morning",
+        "Good afternoon",
+        "Good evening",
+        "Hi there",
+        "Hey, how’s it going?",
+        "Hello, how are you?",
+        "Hi, ready to chat?"
+    ],
+    "responses": [
+        "Hi! I’m the STEM Inspires assistant. I can help you learn about our programs, teams, events, donations, and more."
+    ]
+}
+,{
+    "intent": "farewell",
+    "examples": [
+        "Bye",
+        "Goodbye",
+        "See you later",
+        "Talk to you soon",
+        "Catch you later",
+        "Have a nice day",
+        "Bye for now"
+    ],
+    "responses": [
+        "Goodbye! Feel free to come back anytime to learn more about STEM Inspires and our programs."
+    ]
+}
+,{
+    "intent": "thanks",
+    "examples": [
+        "Thank you",
+        "Thanks",
+        "Thanks a lot",
+        "Many thanks",
+        "Thanks for your help",
+        "I appreciate it"
+    ],
+    "responses": [
+        "You’re welcome! Happy to help you learn more about STEM Inspires."
+    ]
+}
+,{
+    "intent": "help",
+    "examples": [
+        "Can you help me?",
+        "I need assistance",
+        "What can you do?",
+        "How can you help me?",
+        "I need guidance",
+        "What services do you offer?"
+    ],
+    "responses": [
+        "I can provide information about STEM Inspires, our programs like FLL and FTC, donation options, team members, events, and more. Just ask!"
+    ]
+}
+,{
+    "intent": "about_stem_inspires",
+    "examples": [
+        "What is STEM Inspires?",
+        "Tell me about STEM Inspires",
+        "Who runs STEM Inspires?",
+        "What does STEM Inspires do?",
+        "Can you describe STEM Inspires?",
+        "Tell me about your organization"
+    ],
+    "responses": [
+        "STEM Inspires is dedicated to inspiring the next generation of innovators through inclusive, hands-on robotics programs and STEM education in Rwanda and beyond."
+    ]
+},
 ];
 
 export const findBestIntentAdvanced = (input) => {
