@@ -29,6 +29,8 @@ import authRoutes from "./routes/AuthRoutes.js";
 import adminRoutes from "./routes/AdminRoutes.js";
 import paymentRoutes from "./routes/DonationPaymentRoute.js";
 import bannerRoutes from "./routes/BannerRoutes.js";
+import fllRoutes from "./routes/FllRoutes.js";
+import schoolRoutes from "./routes/ftcRoutes.js";
 
 // Initialize express app
 const app = express();
@@ -78,6 +80,8 @@ app.use("/api/gallery", galleryRoutes);
 app.use("/api/testimonials", testimonialsRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/banner", bannerRoutes);
+app.use("/api/fll", fllRoutes);
+app.use("/api/schools", schoolRoutes);
 
 
 // Auth/Admin Routes
