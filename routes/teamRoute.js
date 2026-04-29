@@ -1,39 +1,29 @@
-// backend/routes/teamRoute.js
 import express from "express";
 import multer from "multer";
-import path from "path";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import cloudinary from "../config/cloudinary.js"; // Import your shared config
 import TeamMember from "../models/team.js";
 
 const router = express.Router();
 
-// Multer storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/team");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
+// 1. Configure Cloudinary Storage for Team Members
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: async (req, file) => ({
+    folder: "stem-inspires/team", // Cloudinary folder name
+    allowed_formats: ["jpg", "jpeg", "png", "webp"],
+    transformation: [{ width: 500, height: 500, crop: "fill", gravity: "face" }], // Auto-crop to faces
+    public_id: `${Date.now()}-${file.originalname.split('.')[0]}`,
+  }),
 });
 
 const upload = multer({ storage });
 
-// GET all members
+// GET all members (remains the same)
 router.get("/", async (req, res) => {
   try {
     const team = await TeamMember.find({});
     res.json(team);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-// GET by ID
-router.get("/:id", async (req, res) => {
-  try {
-    const member = await TeamMember.findById(req.params.id);
-    if (!member) return res.status(404).json({ message: "Member not found" });
-    res.json(member);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -47,7 +37,8 @@ router.post("/", upload.single("image"), async (req, res) => {
       name,
       role,
       email: email || null,
-      image: req.file ? `/team/${req.file.filename}` : "",
+      // Use the path provided by Cloudinary
+      image: req.file ? req.file.path : "",
     });
     const saved = await member.save();
     res.status(201).json(saved);
@@ -60,7 +51,9 @@ router.post("/", upload.single("image"), async (req, res) => {
 router.put("/:id", upload.single("image"), async (req, res) => {
   try {
     const updateData = { ...req.body };
-    if (req.file) updateData.image = `/team/${req.file.filename}`;
+    // Update the image only if a new file is provided
+    if (req.file) updateData.image = req.file.path;
+
     const updated = await TeamMember.findByIdAndUpdate(req.params.id, updateData, { new: true });
     if (!updated) return res.status(404).json({ message: "Member not found" });
     res.json(updated);
@@ -69,7 +62,7 @@ router.put("/:id", upload.single("image"), async (req, res) => {
   }
 });
 
-// DELETE member
+// DELETE member (remains the same)
 router.delete("/:id", async (req, res) => {
   try {
     const deleted = await TeamMember.findByIdAndDelete(req.params.id);

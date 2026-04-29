@@ -1,8 +1,31 @@
 import express from "express";
 import Support from "../models/support.js";
-import upload from "../multer/uploadSupport.js"; // reuse multer setup for image uploads
+import multer from "multer";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const router = express.Router();
+
+// ☁️ Cloudinary Configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// 📁 Setup Cloudinary Storage
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "support",
+    allowed_formats: ["jpg", "jpeg", "png", "webp"],
+  },
+});
+
+const upload = multer({ storage });
 
 // GET all support cards
 router.get("/", async (req, res) => {
@@ -19,7 +42,7 @@ router.post("/", upload.single("image"), async (req, res) => {
   try {
     const newSupport = new Support({
       ...req.body,
-      image: req.file ? `/support/${req.file.filename}` : req.body.image,
+      image: req.file ? req.file.path : req.body.image,
     });
     await newSupport.save();
     res.json(newSupport);
@@ -35,7 +58,7 @@ router.put("/:id", upload.single("image"), async (req, res) => {
       req.params.id,
       {
         ...req.body,
-        ...(req.file && { image: `/support/${req.file.filename}` }),
+        ...(req.file && { image: req.file.path }),
       },
       { new: true }
     );

@@ -1,79 +1,59 @@
 import express from "express";
 import multer from "multer";
-import path from "path";
-import { fileURLToPath } from "url";
-import fs from "fs";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 import School from "../models/School.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const router = express.Router();
 
-// === ENSURE UPLOAD DIRECTORY EXISTS ===
-const uploadDir = path.join(__dirname, "../public/ftc");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-  console.log("Created upload directory:", uploadDir);
-}
+// === CLOUDINARY CONFIG ===
+// Make sure these variables are in your .env file
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-// === MULTER CONFIG ===
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir); // Save to backend/public/ftc
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const ext = path.extname(file.originalname);
-    cb(null, "img-" + uniqueSuffix + ext); // e.g. img-1234567890.jpg
+// === MULTER CLOUDINARY STORAGE ===
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "ftc_schools", // The folder name in your Cloudinary dashboard
+    allowed_formats: ["jpg", "jpeg", "png", "webp", "gif"],
+    public_id: (req, file) => `school-${Date.now()}`,
   },
 });
 
 const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
-  fileFilter: (req, file, cb) => {
-    const allowedTypes = /jpeg|jpg|png|gif|webp/;
-    const extOk = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-    const mimeOk = allowedTypes.test(file.mimetype);
-    if (extOk && mimeOk) return cb(null, true);
-    cb(new Error("Only image files (jpeg, jpg, png, gif, webp) are allowed"));
-  },
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB
 });
 
 // === CREATE SCHOOL ===
-// CREATE SCHOOL
-router.post("/", (req, res) => {
-  upload.single("img")(req, res, async (err) => {
-    if (err) {
-      console.error("Multer error:", err.message);
-      return res.status(400).json({ error: err.message });
+router.post("/", upload.single("image"), async (req, res) => {
+  try {
+    const { name, location, website } = req.body;
+
+    if (!name || !location) {
+      return res.status(400).json({ error: "Name and location are required" });
     }
 
-    try {
-      const { name, location, website } = req.body;
+    // req.file.path is the URL provided by Cloudinary
+    const imgUrl = req.file ? req.file.path : "";
 
-      if (!name || !location) {
-        return res.status(400).json({ error: "Name and location are required" });
-      }
+    const school = await School.create({
+      name,
+      location,
+      website: website || "",
+      img: imgUrl,
+    });
 
-      const imgUrl = req.file ? `/ftc/${req.file.filename}` : "";
-
-      const school = await School.create({
-        name,
-        location,
-        website: website || "",
-        img: imgUrl,
-      });
-
-      res.status(201).json(school);
-    } catch (err) {
-      console.error("Create error:", err);
-      res.status(400).json({ error: err.message });
-    }
-  });
+    res.status(201).json(school);
+  } catch (err) {
+    console.error("Create error:", err);
+    res.status(400).json({ error: err.message });
+  }
 });
-
 
 // === GET ALL SCHOOLS ===
 router.get("/", async (req, res) => {
@@ -81,27 +61,19 @@ router.get("/", async (req, res) => {
     const schools = await School.find();
     res.json(schools);
   } catch (err) {
-    console.error("Get all error:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
 
-// === GET ONE SCHOOL ===
-router.get("/:id", async (req, res) => {
-  try {
-    const school = await School.findById(req.params.id);
-    if (!school) return res.status(404).json({ error: "School not found" });
-    res.json(school);
-  } catch (err) {
-    res.status(404).json({ error: "School not found" });
-  }
-});
-
 // === UPDATE SCHOOL ===
-router.put("/:id", upload.single("img"), async (req, res) => {
+router.put("/:id", upload.single("image"), async (req, res) => {
   try {
     const update = { ...req.body };
-    if (req.file) update.img = `/ftc/${req.file.filename}`;
+
+    // If a new file is uploaded, update the image URL
+    if (req.file) {
+      update.img = req.file.path;
+    }
 
     const updated = await School.findByIdAndUpdate(req.params.id, update, {
       new: true,
@@ -121,18 +93,13 @@ router.delete("/:id", async (req, res) => {
     const school = await School.findById(req.params.id);
     if (!school) return res.status(404).json({ error: "School not found" });
 
-    // Optional: Delete image from disk
-    if (school.img) {
-      const filePath = path.join(__dirname, "../public", school.img);
-      fs.unlink(filePath, (err) => {
-        if (err) console.error("Failed to delete image:", err);
-      });
-    }
+    // Note: If you want to delete the image from Cloudinary too,
+    // you would need to extract the public_id from the URL and use
+    // cloudinary.uploader.destroy(public_id).
 
     await School.findByIdAndDelete(req.params.id);
     res.json({ message: "School deleted successfully" });
   } catch (err) {
-    console.error("Delete error:", err);
     res.status(400).json({ error: err.message });
   }
 });

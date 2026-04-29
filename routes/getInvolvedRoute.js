@@ -1,8 +1,31 @@
 import express from "express";
 import GetInvolved from "../models/getInvolvedModel.js";
-import upload from "../multer/uploadGetInvolved.js";
+import multer from "multer";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const router = express.Router();
+
+// ☁️ Cloudinary Configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// 📁 Setup Cloudinary Storage
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "getInvolved",
+    allowed_formats: ["jpg", "jpeg", "png", "webp"],
+  },
+});
+
+const upload = multer({ storage });
 
 // Get all items
 router.get("/", async (req, res) => {
@@ -19,7 +42,7 @@ router.post("/", upload.single("img"), async (req, res) => {
   try {
     const newItem = new GetInvolved({
       ...req.body,
-      img: req.file ? `/getInvolved/${req.file.filename}` : req.body.img,
+      img: req.file ? req.file.path : req.body.img,
     });
     await newItem.save();
     res.json(newItem);
@@ -35,7 +58,7 @@ router.put("/:id", upload.single("img"), async (req, res) => {
       req.params.id,
       {
         ...req.body,
-        ...(req.file && { img: `/getInvolved/${req.file.filename}` }),
+        ...(req.file && { img: req.file.path }),
       },
       { new: true }
     );

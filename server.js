@@ -36,6 +36,7 @@ import heroRoutes from "./routes/HeroRoutes.js";
 import statsRoutes from "./routes/startsRoute.js";
 import ftcLandingRoutes from "./routes/FtcRoute.js";
 import sectionTextRoutes from "./routes/sistersRoute.js";
+import chatRoute from "./routes/chatRoute.js"
 
 
 
@@ -51,7 +52,7 @@ connectDB();
 // Enable CORS for frontend
 app.use(
   cors({
-    origin: ["https://stem-11.vercel.app","http://localhost:5173"],
+    origin: ["https://stem-11.vercel.app", "http://localhost:5173"],
     credentials: true,
   })
 );
@@ -97,6 +98,7 @@ app.use("/api/hero", heroRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/ftc-landing", ftcLandingRoutes);
 app.use("/api/sections", sectionTextRoutes);
+app.use("/api/chat", chatRoute);
 
 
 

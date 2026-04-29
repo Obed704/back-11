@@ -1,25 +1,27 @@
 import express from "express";
 import multer from "multer";
-import path from "path";
-import { fileURLToPath } from "url";
-import fs from "fs";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import dotenv from "dotenv";
 import FtcLanding from "../models/ftcLanding.js";
+
+dotenv.config();
 
 const router = express.Router();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// ☁️ Cloudinary Configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-// === UPLOAD DIR ===
-const uploadDir = path.join(__dirname, "../public/ftc");
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
-
-// === MULTER ===
-const storage = multer.diskStorage({
-  destination: uploadDir,
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, `ftc-${Date.now()}${ext}`);
+// 📁 Setup Cloudinary Storage
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "ftc",
+    allowed_formats: ["jpg", "jpeg", "png", "webp"],
   },
 });
 
@@ -43,10 +45,10 @@ router.put(
       const body = JSON.parse(req.body.data);
 
       if (req.files?.heroImage)
-        body.hero.backgroundImage = `/ftc/${req.files.heroImage[0].filename}`;
+        body.hero.backgroundImage = req.files.heroImage[0].path;
 
       if (req.files?.aboutImage)
-        body.about.image = `/ftc/${req.files.aboutImage[0].filename}`;
+        body.about.image = req.files.aboutImage[0].path;
 
       const updated = await FtcLanding.findOneAndUpdate(
         {},

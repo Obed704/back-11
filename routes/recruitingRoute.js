@@ -1,51 +1,69 @@
 import express from "express";
 import multer from "multer";
-import path from "path";
+import mongoose from "mongoose";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 import ProcessStep from "../models/recruiting.js";
+import dotenv from "dotenv";
 
+dotenv.config();
 const router = express.Router();
 
-// 🔹 Configure Multer for uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/recruiting"); // Save files into /public/recruiting
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}${path.extname(file.originalname)}`);
+// ☁️ Cloudinary Configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "recruiting_process",
+    allowed_formats: ["jpg", "jpeg", "png", "webp"],
   },
 });
+
 const upload = multer({ storage });
 
-// =============================
-// GET all process steps
-// =============================
+// ✅ GET ALL
 router.get("/", async (req, res) => {
   try {
-    const steps = await ProcessStep.find();
+    const steps = await ProcessStep.find().sort({ createdAt: 1 });
     res.json(steps);
   } catch (error) {
-    console.error("Error fetching process steps:", error);
     res.status(500).json({ message: "Error fetching process steps" });
   }
 });
 
-// =============================
-// UPDATE a process step
-// =============================
+// ✅ UPDATE STEP (Supports Text & Image)
 router.put("/:id", upload.single("img"), async (req, res) => {
+  const { id } = req.params;
+
+  // 🛡️ Guard: Check if ID is valid MongoDB format
+  if (!mongoose.Types.ObjectId.isValid(id) || id === "undefined") {
+    return res.status(400).json({ message: "Invalid or missing ID format" });
+  }
+
   try {
     const { title, description, alt, highlight } = req.body;
 
-    const updateData = { title, description, alt, highlight };
+    // Build update object dynamically
+    const updateData = {};
+    if (title !== undefined) updateData.title = title;
+    if (description !== undefined) updateData.description = description;
+    if (alt !== undefined) updateData.alt = alt;
+    if (highlight !== undefined) updateData.highlight = highlight;
 
+    // Add image if file was uploaded
     if (req.file) {
-      updateData.img = `/recruiting/${req.file.filename}`;
+      updateData.img = req.file.path;
     }
 
     const updatedStep = await ProcessStep.findByIdAndUpdate(
-      req.params.id,
-      updateData,
-      { new: true }
+      id,
+      { $set: updateData },
+      { new: true, runValidators: true }
     );
 
     if (!updatedStep) {
@@ -54,8 +72,8 @@ router.put("/:id", upload.single("img"), async (req, res) => {
 
     res.json(updatedStep);
   } catch (error) {
-    console.error("Error updating process step:", error);
-    res.status(500).json({ message: "Error updating process step" });
+    console.error("Backend Update Error:", error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 });
 

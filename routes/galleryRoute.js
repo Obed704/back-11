@@ -1,38 +1,33 @@
-// backend/routes/galleryRoutes.js
 import express from "express";
 import multer from "multer";
-import path from "path";
-import fs from "fs";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 import GalleryImage from "../models/gallery.js";
+import dotenv from "dotenv";
 
+dotenv.config();
 const router = express.Router();
 
-// Make sure this folder exists: backend/public/championsImage
-const UPLOAD_FOLDER = "public/championsImage";
+// ☁️ Cloudinary Configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-// Multer storage: save into public/championsImage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, UPLOAD_FOLDER);
-  },
-  filename: (req, file, cb) => {
-    const unique = Date.now() + "-" + file.originalname.replace(/\s+/g, "-");
-    cb(null, unique);
+// 📁 Setup Cloudinary Storage
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "champions_gallery",
+    allowed_formats: ["jpg", "jpeg", "png", "webp"],
+    transformation: [{ width: 1000, crop: "limit" }], // Optional: Resize on upload
   },
 });
+
 const upload = multer({ storage });
 
-// Helper to delete a file (if exists)
-const deleteFileIfExists = (relativePath) => {
-  if (!relativePath) return;
-  // relativePath expected like "/championsImage/abcdef.jpg"
-  const filePath = path.join("public", relativePath.replace(/^\//, ""));
-  if (fs.existsSync(filePath)) {
-    try { fs.unlinkSync(filePath); } catch (e) { console.warn("Failed to delete:", filePath, e); }
-  }
-};
-
-// GET all
+// ✅ GET all
 router.get("/", async (req, res) => {
   try {
     const items = await GalleryImage.find().sort({ createdAt: -1 });
@@ -42,15 +37,20 @@ router.get("/", async (req, res) => {
   }
 });
 
-// POST new (upload)
+// ✅ POST new (upload to Cloudinary)
 router.post("/", upload.single("image"), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ message: "Image file required" });
 
-    const imgPath = `/championsImage/${req.file.filename}`;
+    // req.file.path contains the secure Cloudinary URL
     const { alt, title } = req.body;
 
-    const doc = new GalleryImage({ image: imgPath, alt: alt || "", title: title || "" });
+    const doc = new GalleryImage({
+      image: req.file.path,
+      alt: alt || "",
+      title: title || ""
+    });
+
     await doc.save();
     res.status(201).json(doc);
   } catch (err) {
@@ -58,7 +58,7 @@ router.post("/", upload.single("image"), async (req, res) => {
   }
 });
 
-// PUT update (replace image optionally and/or change alt/title)
+// ✅ PUT update
 router.put("/:id", upload.single("image"), async (req, res) => {
   try {
     const item = await GalleryImage.findById(req.params.id);
@@ -69,10 +69,8 @@ router.put("/:id", upload.single("image"), async (req, res) => {
     if (title !== undefined) item.title = title;
 
     if (req.file) {
-      // delete old file
-      deleteFileIfExists(item.image);
-      // set new path
-      item.image = `/championsImage/${req.file.filename}`;
+      // item.image = new cloudinary URL
+      item.image = req.file.path;
     }
 
     await item.save();
@@ -82,14 +80,14 @@ router.put("/:id", upload.single("image"), async (req, res) => {
   }
 });
 
-// DELETE
+// ✅ DELETE
 router.delete("/:id", async (req, res) => {
   try {
     const item = await GalleryImage.findById(req.params.id);
     if (!item) return res.status(404).json({ message: "Not found" });
 
-    // delete file
-    deleteFileIfExists(item.image);
+    // Note: To delete from Cloudinary as well, you would need the public_id.
+    // For now, we delete the record from MongoDB.
     await item.deleteOne();
     res.json({ message: "Deleted" });
   } catch (err) {

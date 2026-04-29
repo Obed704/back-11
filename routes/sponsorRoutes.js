@@ -1,36 +1,25 @@
 import express from "express";
 import multer from "multer";
-import path from "path";
-import fs from "fs";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import cloudinary from "../config/cloudinary.js"; // Reuse your existing config
 import Sponsor from "../models/sponsors.js";
 
 const router = express.Router();
 
-// Multer storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const dir = path.join(process.cwd(), "public/sponsors");
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueName = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueName + path.extname(file.originalname));
-  },
+// 1. Configure Cloudinary Storage for Sponsors
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: async (req, file) => ({
+    folder: "stem-inspires/sponsors", // Organized subfolder
+    allowed_formats: ["jpg", "jpeg", "png", "webp"],
+    transformation: [{ width: 800, crop: "limit" }], // Optional: resize for consistency
+    public_id: `${Date.now()}-${file.originalname.split('.')[0]}`,
+  }),
 });
 
 const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
-  fileFilter: (req, file, cb) => {
-    const filetypes = /jpeg|jpg|png/;
-    const extname = filetypes.test(
-      path.extname(file.originalname).toLowerCase()
-    );
-    const mimetype = filetypes.test(file.mimetype);
-    if (mimetype && extname) return cb(null, true);
-    cb(new Error("Only images (jpeg, jpg, png) are allowed"));
-  },
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
 });
 
 // CREATE sponsor
@@ -42,7 +31,8 @@ router.post("/", upload.single("img"), async (req, res) => {
       description,
       gradient,
       btnColor,
-      img: req.file ? `/sponsors/${req.file.filename}` : "",
+      // Cloudinary returns the full URL in req.file.path
+      img: req.file ? req.file.path : "",
     });
     const savedSponsor = await sponsor.save();
     res.status(201).json(savedSponsor);
@@ -55,7 +45,9 @@ router.post("/", upload.single("img"), async (req, res) => {
 router.put("/:id", upload.single("img"), async (req, res) => {
   try {
     const updateData = { ...req.body };
-    if (req.file) updateData.img = `/sponsors/${req.file.filename}`;
+    // If a new file is uploaded, use the new Cloudinary URL
+    if (req.file) updateData.img = req.file.path;
+
     const updatedSponsor = await Sponsor.findByIdAndUpdate(
       req.params.id,
       updateData,
@@ -67,9 +59,10 @@ router.put("/:id", upload.single("img"), async (req, res) => {
   }
 });
 
-// DELETE sponsor
+// DELETE, GET routes remain the same...
 router.delete("/:id", async (req, res) => {
   try {
+    // Optional: Add logic here to destroy the image on Cloudinary using cloudinary.uploader.destroy()
     await Sponsor.findByIdAndDelete(req.params.id);
     res.json({ message: "Sponsor deleted successfully" });
   } catch (err) {
@@ -77,7 +70,6 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// GET all sponsors
 router.get("/", async (req, res) => {
   try {
     const sponsors = await Sponsor.find();

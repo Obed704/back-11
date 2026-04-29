@@ -1,57 +1,79 @@
 import express from "express";
 import multer from "multer";
-import path from "path";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 import EducationElement from "../models/education.js";
+import dotenv from "dotenv";
 
+dotenv.config();
 const router = express.Router();
 
-// 📁 Setup Multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/education"); // Save to /public/education
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}${path.extname(file.originalname)}`);
+// ☁️ Cloudinary Configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// 📁 Setup Cloudinary Storage
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "education_assets",
+    allowed_formats: ["jpg", "jpeg", "png", "webp", "svg"],
+    public_id: (req, file) => `edu-${Date.now()}`,
   },
 });
 
 const upload = multer({ storage });
 
-// ✅ GET all education elements
+// ✅ GET all elements
 router.get("/", async (req, res) => {
   try {
-    const elements = await EducationElement.find();
+    const elements = await EducationElement.find().sort({ createdAt: -1 });
     res.json(elements);
   } catch (err) {
-    console.error("Error fetching education elements:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-// ✅ UPDATE an existing education element (title, description, etc.)
+// ✅ UPDATE element
 router.put("/:id", upload.single("img"), async (req, res) => {
   try {
     const { title, description, borderColor, alt } = req.body;
-    const updateData = { title, description, borderColor, alt };
 
-    // If an image was uploaded, add it to the update data
+    // Find existing item first
+    const existingItem = await EducationElement.findById(req.params.id);
+    if (!existingItem) return res.status(404).json({ message: "Not found" });
+
+    const updateData = {
+      title: title || existingItem.title,
+      description: description || existingItem.description,
+      borderColor: borderColor || existingItem.borderColor,
+      alt: alt || existingItem.alt
+    };
+
+    // If a new image was uploaded
     if (req.file) {
-      updateData.img = `/education/${req.file.filename}`;
+      updateData.img = req.file.path;
+
+      // OPTIONAL: Delete old image from Cloudinary to save space
+      if (existingItem.img.includes("cloudinary")) {
+        const publicId = existingItem.img.split('/').pop().split('.')[0];
+        cloudinary.uploader.destroy(`education_assets/${publicId}`).catch(e => console.log("Old image delete failed"));
+      }
     }
 
     const updated = await EducationElement.findByIdAndUpdate(
       req.params.id,
-      updateData,
+      { $set: updateData },
       { new: true }
     );
 
-    if (!updated)
-      return res.status(404).json({ message: "Education element not found" });
-
     res.json(updated);
   } catch (err) {
-    console.error("Error updating element:", err);
-    res.status(500).json({ message: "Failed to update education element" });
+    console.error("Update Error:", err);
+    res.status(500).json({ message: "Failed to update", error: err.message });
   }
 });
 

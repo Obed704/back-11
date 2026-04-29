@@ -11,6 +11,8 @@ const sectionTextSchema = new mongoose.Schema(
         highlight: { type: Boolean, default: false }, // true = cyan color
       },
     ],
+    image1: { type: String }, // Cloudinary URL 1
+    image2: { type: String }, // Cloudinary URL 2
   },
   { timestamps: true }
 );
