@@ -6,6 +6,8 @@ import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import connectDB from "./config/connectMongo.js";
+import dns from 'node:dns';
+
 
 // Import Routes
 import slideRoutes from "./routes/slideRoutes.js";
@@ -45,7 +47,7 @@ import chatRoute from "./routes/chatRoute.js"
 
 // Initialize express app
 const app = express();
-
+dns.setDefaultResultOrder('ipv4first');
 // Connect to MongoDB
 connectDB();
 
@@ -71,8 +73,7 @@ const __dirname = path.dirname(__filename);
 // Serve static files
 app.use(express.static(path.join(__dirname, "public")));
 
-// Routes
-app.use("/api/chat", chatRoutes);
+
 app.use("/api/slides", slideRoutes);
 app.use("/api/mission-vision", missionVisionRoutes);
 app.use("/api/champions", championRoutes);

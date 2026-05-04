@@ -1,23 +1,6 @@
-import express from "express";
-import dotenv from "dotenv";
-import OpenAI from "openai";
 
-dotenv.config();
 
-const router = express.Router();
-
-// ─── SAFETY CHECK ─────────────────────────────
-if (!process.env.GROQ_API_KEY) {
-  throw new Error("❌ Missing GROQ_API_KEY in .env");
-}
-
-// ─── INIT GROQ CLIENT ─────────────────────────
-const openai = new OpenAI({
-  apiKey: process.env.GROQ_API_KEY,
-  baseURL: "https://api.groq.com/openai/v1",
-});
-
-// ─── SYSTEM PROMPT ─────────────────────────────
+// ─── SYSTEM PROMPT & KNOWLEDGE BASE ─────────────────────────
 const SYSTEM_PROMPT = `
 You are the official AI assistant for STEM Inspires — a nonprofit based in Rwanda and Central Africa.
 Your job is to answer questions clearly, warmly, and accurately based only on the knowledge below.
@@ -124,140 +107,32 @@ EVENTS
 SOCIAL MEDIA
 ═══════════════════════════════════════════════════════════
 Follow STEM Inspires on Instagram, LinkedIn, and YouTube for photos, updates, and project highlights.
-`;
+`.trim();
 
-// ─── MEMORY STORE ──────────────────────────────
+// ─── INITIALIZATION ─────────────────────────────────────────
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+// Use 'gemini-1.5-flash' as the primary model. 
+// If this still fails, try 'gemini-pro'.
+const model = genAI.getGenerativeModel({
+    model: "gemini-pro",
+    systemInstruction: SYSTEM_PROMPT
+});
+
+// ─── SESSION MEMORY ──────────────────────────────────────────
 const sessions = new Map();
-const TTL = 30 * 60 * 1000;
+const SESSION_TTL_MS = 30 * 60 * 1000;
 
-// ─── SESSION HELPERS ───────────────────────────
 const getSession = (sessionId) => {
-  if (!sessionId) return [];
-
-  const session = sessions.get(sessionId);
-  if (!session) return [];
-
-  if (Date.now() - session.lastActive > TTL) {
-    sessions.delete(sessionId);
-    return [];
-  }
-
-  return session.messages || [];
+    const session = sessions.get(sessionId);
+    if (!session) return [];
+    if (Date.now() - session.lastActive > SESSION_TTL_MS) {
+        sessions.delete(sessionId);
+        return [];
+    }
+    session.lastActive = Date.now();
+    return session.messages;
 };
 
-const saveSession = (sessionId, messages) => {
-  if (!sessionId) return;
-
-  sessions.set(sessionId, {
-    messages,
-    lastActive: Date.now(),
-  });
-};
-
-// ─── SMART MODEL ROUTER ────────────────────────
-const MODELS = [
-  "llama-3.2-3b-preview",     // ultra fast
-  "llama-3.2-8b-instant",     // balanced
-  "mixtral-8x7b-32768",       // strong reasoning
-  "llama-3.1-8b-instant",     // fallback legacy
-];
-
-// ─── GROQ CALL WITH AUTO FALLBACK ─────────────
-const askGroq = async (history, message) => {
-  const messages = [
-    { role: "system", content: SYSTEM_PROMPT },
-    ...history,
-    { role: "user", content: message },
-  ];
-
-  let lastError = null;
-
-  for (const model of MODELS) {
-    try {
-      console.log(`🧠 Trying model: ${model}`);
-
-      const completion = await openai.chat.completions.create({
-        model,
-        messages,
-        temperature: 0.7,
-      });
-
-      console.log(`✅ Success with model: ${model}`);
-
-      return completion.choices[0].message.content;
-    } catch (err) {
-      console.warn(`⚠️ Model failed: ${model}`);
-      lastError = err;
-    }
-  }
-
-  throw lastError || new Error("All Groq models failed");
-};
-
-// ─── CHAT ROUTE ────────────────────────────────
-router.post("/", async (req, res) => {
-  try {
-    const { message, sessionId } = req.body;
-
-    if (!message) {
-      return res.status(400).json({ error: "Message is required" });
-    }
-
-    console.log("📩 Incoming:", message);
-
-    // ─── LOAD HISTORY ───
-    const rawHistory = getSession(sessionId);
-
-    const history = rawHistory.map((m) => ({
-      role: m.role,
-      content: m.content,
-    }));
-
-    // ─── GET AI RESPONSE ───
-    const reply = await askGroq(history, message);
-
-    // ─── SAVE MEMORY ───
-    saveSession(sessionId, [
-      ...rawHistory,
-      { role: "user", content: message },
-      { role: "assistant", content: reply },
-    ]);
-
-    res.json({
-      success: true,
-      reply,
-    });
-
-  } catch (err) {
-    console.error("🔥 GROQ ERROR:", err);
-
-    if (err?.status === 429) {
-      return res.status(429).json({
-        error: "Rate limit exceeded. Try again later.",
-      });
-    }
-
-    res.status(500).json({
-      error: "AI request failed",
-      details: err?.message,
-    });
-  }
-});
-
-// ─── CLEAR SESSION ─────────────────────────────
-router.delete("/session", (req, res) => {
-  const { sessionId } = req.body;
-
-  if (!sessionId) {
-    return res.status(400).json({ error: "sessionId required" });
-  }
-
-  sessions.delete(sessionId);
-
-  res.json({
-    success: true,
-    message: "Session cleared",
-  });
-});
-
-export default router;
+const setSession = (sessionId, messages) => {
+    sessions.set(sessionId, { messages, lastActive: Date.now() });
