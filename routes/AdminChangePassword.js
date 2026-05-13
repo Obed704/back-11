@@ -1,6 +1,6 @@
 import express from "express";
 import bcrypt from "bcryptjs";
-import { protect } from "../middleware/authMidleware.js";
+import { protect } from "../middleware/authMiddleware.js";
 import Admin from "../models/Admin.js";
 
 const router = express.Router();

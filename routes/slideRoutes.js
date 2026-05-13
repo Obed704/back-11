@@ -4,7 +4,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import dotenv from "dotenv";
 import Slide from "../models/slide.js";
-import { protect } from "../middleware/authMidleware.js";
+import { protect } from "../middleware/authMiddleware.js";
 
 dotenv.config();
 

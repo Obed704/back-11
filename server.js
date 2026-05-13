@@ -3,19 +3,19 @@ dotenv.config(); // MUST be first
 
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import path from "path";
 import { fileURLToPath } from "url";
+import dns from "node:dns";
+
 import connectDB from "./config/connectMongo.js";
-import dns from 'node:dns';
 
-
-// Import Routes
+// ─── Import Routes ─────────────────────────────────────────────
 import slideRoutes from "./routes/slideRoutes.js";
 import championRoutes from "./routes/ChampionsRoute.js";
 import downloadsRoutes from "./routes/downloadRouter.js";
 import videoRoutes from "./routes/videoRoutes.js";
 import missionVisionRoutes from "./routes/MissionVisionRoute.js";
-import chatRoutes from "./routes/chatRoute.js";
 import getInvolvedRoute from "./routes/getInvolvedRoute.js";
 import supportRoutes from "./routes/supportRoute.js";
 import sponsorRoutes from "./routes/sponsorRoutes.js";
@@ -38,20 +38,19 @@ import heroRoutes from "./routes/HeroRoutes.js";
 import statsRoutes from "./routes/startsRoute.js";
 import ftcLandingRoutes from "./routes/FtcRoute.js";
 import sectionTextRoutes from "./routes/sistersRoute.js";
-import chatRoute from "./routes/chatRoute.js"
+import chatRoute from "./routes/chatRoute.js";
 
-
-
-
-
-
-// Initialize express app
+// ─── Initialize Express ────────────────────────────────────────
 const app = express();
-dns.setDefaultResultOrder('ipv4first');
-// Connect to MongoDB
+
+dns.setDefaultResultOrder("ipv4first");
+
+// ─── Connect MongoDB ───────────────────────────────────────────
 connectDB();
 
-// Enable CORS for frontend
+// ─── Middleware ────────────────────────────────────────────────
+
+// CORS
 app.use(
   cors({
     origin: ["https://stem-11.vercel.app", "http://localhost:5173"],
@@ -59,21 +58,39 @@ app.use(
   })
 );
 
-// Parse JSON
+// JSON Parser
 app.use(express.json());
 
-// Debug logs
-console.log("✅ Mongo URI:", process.env.MONGO_URI ? "Loaded" : "Missing");
-console.log("✅ JWT Secret:", process.env.JWT_SECRET ? "Loaded" : "Missing");
+// FORM Parser
+app.use(express.urlencoded({ extended: true }));
 
-// __dirname setup for ES modules
+// COOKIE PARSER ✅ IMPORTANT FIX
+app.use(cookieParser());
+
+// ─── Debug Logs ────────────────────────────────────────────────
+console.log(
+  "✅ Mongo URI:",
+  process.env.MONGO_URI ? "Loaded" : "Missing"
+);
+
+console.log(
+  "✅ JWT Secret:",
+  process.env.JWT_SECRET ? "Loaded" : "Missing"
+);
+
+console.log(
+  "✅ Refresh Secret:",
+  process.env.JWT_REFRESH_SECRET ? "Loaded" : "Missing"
+);
+
+// ─── __dirname Fix For ES Modules ─────────────────────────────
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Serve static files
+// ─── Static Files ─────────────────────────────────────────────
 app.use(express.static(path.join(__dirname, "public")));
 
-
+// ─── API Routes ───────────────────────────────────────────────
 app.use("/api/slides", slideRoutes);
 app.use("/api/mission-vision", missionVisionRoutes);
 app.use("/api/champions", championRoutes);
@@ -101,18 +118,29 @@ app.use("/api/ftc-landing", ftcLandingRoutes);
 app.use("/api/sections", sectionTextRoutes);
 app.use("/api/chat", chatRoute);
 
-
-
-// Auth/Admin Routes
-app.use("/api/admin", authRoutes);
+// ─── Auth/Admin Routes ────────────────────────────────────────
+app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 
-// Global Error Handler
-app.use((err, req, res, next) => {
-  console.error("❌ Server Error:", err.stack);
-  res.status(500).json({ error: "Something went wrong!" });
+// ─── Health Check Route ───────────────────────────────────────
+app.get("/", (req, res) => {
+  res.send("✅ STEM Backend Running");
 });
 
-// Start server
+// ─── Global Error Handler ─────────────────────────────────────
+app.use((err, req, res, next) => {
+  console.error("❌ Server Error:");
+  console.error(err.stack);
+
+  res.status(500).json({
+    success: false,
+    message: "Something went wrong!",
+  });
+});
+
+// ─── Start Server ─────────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`✅ Server running on http://localhost:${PORT}`));
+
+app.listen(PORT, () => {
+  console.log(`✅ Server running on http://localhost:${PORT}`);
+});

@@ -3,14 +3,17 @@ import {
   createStripePayment,
   createStripeSubscription,
   createPayPalPayment,
-  GetPayments,
+  getAllPayments,
 } from "../controllers/paymentController.js";
 
 const router = express.Router();
 
-router.post("/stripe", createStripePayment);           // One-time
-router.post("/stripe/subscription", createStripeSubscription); // Monthly
+// ─── Payments ────────────────────────────────────────────────
+router.post("/stripe", createStripePayment);
+router.post("/stripe/subscription", createStripeSubscription);
 router.post("/paypal", createPayPalPayment);
-router.get("/",GetPayments)
+
+// ✔ FIXED HERE
+router.get("/", getAllPayments);
 
 export default router;
