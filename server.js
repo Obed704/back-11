@@ -90,8 +90,6 @@ app.use(
   })
 );
 
-// Explicitly handle CORS preflight requests
-app.options("*", cors());
 
 // JSON Parser
 app.use(express.json());
