@@ -57,6 +57,9 @@ connectDB();
 // CORS
 // ===============================
 
+// ─── CORS ─────────────────────────────────────────────────────
+// Allow any frontend origin.
+// Useful for V0 preview URLs, which change frequently.
 app.use(
   cors({
     origin: true,
