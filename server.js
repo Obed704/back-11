@@ -51,12 +51,44 @@ connectDB();
 // ─── Middleware ────────────────────────────────────────────────
 
 // CORS
+// CORS
+// Allow requests from any frontend origin
 app.use(
   cors({
-    origin: ["https://stem-11.vercel.app", "http://localhost:5173","https://new-chat-5aim.v0.build","https://new-chat-1jkd.v0.build"],
+    origin: (origin, callback) => {
+      // Allow requests without an Origin header
+      // Examples: Postman, curl, server-to-server requests
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      // Allow any frontend origin
+      return callback(null, origin);
+    },
+
+    // Allow cookies and authentication credentials
     credentials: true,
+
+    // Allowed HTTP methods
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+
+    // Allowed request headers
+    allowedHeaders: [
+      "Origin",
+      "X-Requested-With",
+      "Content-Type",
+      "Accept",
+      "Authorization",
+      "Cookie",
+    ],
+
+    // Tell browsers they can cache the CORS preflight response
+    maxAge: 86400,
   })
 );
+
+// Explicitly handle CORS preflight requests
+app.options("*", cors());
 
 // JSON Parser
 app.use(express.json());
