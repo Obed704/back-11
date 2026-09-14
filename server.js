@@ -63,7 +63,7 @@ connectDB();
 app.use(
   cors({
     origin: true,
-    credentials: true,
+    credentials: false,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: [
       "Origin",
@@ -71,13 +71,10 @@ app.use(
       "Content-Type",
       "Accept",
       "Authorization",
-      "Cookie",
     ],
     maxAge: 86400,
   })
 );
-
-
 // JSON Parser
 app.use(express.json());
 
