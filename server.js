@@ -10,7 +10,7 @@ import dns from "node:dns";
 
 import connectDB from "./config/connectMongo.js";
 
-// ─── Import Routes ─────────────────────────────────────────────
+// ─── Import Routes ─────────────────────────────────────────
 import slideRoutes from "./routes/slideRoutes.js";
 import championRoutes from "./routes/ChampionsRoute.js";
 import downloadsRoutes from "./routes/downloadRouter.js";
