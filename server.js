@@ -53,6 +53,9 @@ connectDB();
 // CORS
 // CORS
 // Allow requests from any frontend origin
+// ===============================
+// CORS
+// ===============================
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -82,7 +85,7 @@ app.use(
       "Cookie",
     ],
 
-    // Tell browsers they can cache the CORS preflight response
+    // Cache preflight responses for 24 hours
     maxAge: 86400,
   })
 );
