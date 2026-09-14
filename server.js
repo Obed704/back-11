@@ -56,26 +56,12 @@ connectDB();
 // ===============================
 // CORS
 // ===============================
+
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // Allow requests without an Origin header
-      // Examples: Postman, curl, server-to-server requests
-      if (!origin) {
-        return callback(null, true);
-      }
-
-      // Allow any frontend origin
-      return callback(null, origin);
-    },
-
-    // Allow cookies and authentication credentials
+    origin: true,
     credentials: true,
-
-    // Allowed HTTP methods
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-
-    // Allowed request headers
     allowedHeaders: [
       "Origin",
       "X-Requested-With",
@@ -84,8 +70,6 @@ app.use(
       "Authorization",
       "Cookie",
     ],
-
-    // Cache preflight responses for 24 hours
     maxAge: 86400,
   })
 );
