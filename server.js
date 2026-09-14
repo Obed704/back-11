@@ -53,7 +53,7 @@ connectDB();
 // CORS
 app.use(
   cors({
-    origin: ["https://stem-11.vercel.app", "http://localhost:5173"],
+    origin: ["https://stem-11.vercel.app", "http://localhost:5173","https://new-chat-5aim.v0.build"],
     credentials: true,
   })
 );
